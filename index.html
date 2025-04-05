@@ -236,3 +236,43 @@
   </script>
 </body>
 </html>
+// --- 問題生成関数 ---
+    function generateProblems(stage, mode, count) {
+        console.log(`generateProblems called with: stage=${stage}, mode=${mode}, count=${count}`); // ★追加
+        const generatedProblems = [];
+        // ... (問題生成ロジックはそのまま) ...
+        console.log("Generated problems array:", generatedProblems); // ★追加 (配列の中身を確認)
+        // Fisher-Yatesシャッフル
+        for (let i = generatedProblems.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [generatedProblems[i], generatedProblems[j]] = [generatedProblems[j], generatedProblems[i]]; }
+        return generatedProblems;
+    }
+
+    // --- showQuestion関数 ---
+    function showQuestion() {
+        console.log(`showQuestion called. Index: ${currentProblemIndex}, Problems array length: ${problems ? problems.length : 'undefined'}`); // ★追加
+        if (problems && problems.length > currentProblemIndex) { // ★追加: problems配列が存在し、indexが範囲内か確認
+             console.log("Current problem data:", problems[currentProblemIndex]); // ★追加
+        } else {
+             console.error("Problem data is missing or index out of bounds!"); // ★追加: エラーログ
+        }
+
+        battleInProgress = false;
+        // ★変更: 終了条件を questionsForThisStage で判定
+        if (currentProblemIndex >= questionsForThisStage || playerHP <= 0 || enemyHP <= 0) {
+            endBattle();
+            return;
+        }
+        const p = problems[currentProblemIndex]; // ここでエラーの可能性がある
+
+        // ★追加: pが取得できたかチェック (より安全に)
+        if (!p) {
+            console.error("Failed to get problem data 'p' at index", currentProblemIndex);
+            battleLog.textContent = "エラー：問題データの取得に失敗しました。";
+            // endBattle(); // エラー発生時に戦闘を終了させるなど
+            return; // 処理中断
+        }
+
+        questionDiv.textContent = p.q; // pが存在すれば安全にアクセスできる
+        questionStartTime = Date.now();
+        // ... (以下、変更なし) ...
+    }
