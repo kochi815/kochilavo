@@ -111,7 +111,7 @@
   </div>
   <button id="startBtn">スタート</button>
   <button id="homeBtn" style="display: none;">ホームにもどる</button>
-  <button id="rankBtn">称号一覧</button>
+  <button id="rankBtn" style="display: inline-block;">称号一覧</button>
   <button id="shopBtn">ショップ</button>
   <div id="shopModal">
     <h2>ねこショップ</h2>
@@ -119,6 +119,17 @@
     <button id="closeShop">とじる</button>
   </div>
   <script>
+    // --- コイン管理関数 ---
+    function getCoins() {
+      return parseInt(localStorage.getItem("coins") || "0");
+    }
+    function setCoins(value) {
+      localStorage.setItem("coins", value);
+      document.getElementById("coinInfo").textContent = `💰 ねこコイン: ${value}`;
+    }
+    setCoins(getCoins());
+
+    // --- ショップ機能 ---
     const shopItemsData = [
       { id: "cat1", emoji: "🐱", name: "ノーマルねこ", price: 0 },
       { id: "cat2", emoji: "😺", name: "スマイルねこ", price: 100 },
