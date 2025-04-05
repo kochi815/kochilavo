@@ -111,7 +111,7 @@
   </div>
   <button id="startBtn">スタート</button>
   <button id="homeBtn" style="display: none;">ホームにもどる</button>
-  <button id="rankBtn" style="display: inline-block;">称号一覧</button>
+  <button id="rankBtn">称号一覧</button>
   <button id="shopBtn">ショップ</button>
   <div id="shopModal">
     <h2>ねこショップ</h2>
@@ -119,7 +119,7 @@
     <button id="closeShop">とじる</button>
   </div>
   <script>
-    // --- コイン管理関数 ---
+    // コイン管理
     function getCoins() {
       return parseInt(localStorage.getItem("coins") || "0");
     }
@@ -129,7 +129,7 @@
     }
     setCoins(getCoins());
 
-    // --- ショップ機能 ---
+    // ショップ機能
     const shopItemsData = [
       { id: "cat1", emoji: "🐱", name: "ノーマルねこ", price: 0 },
       { id: "cat2", emoji: "😺", name: "スマイルねこ", price: 100 },
@@ -181,6 +181,12 @@
     });
     document.getElementById("closeShop").addEventListener("click", () => {
       document.getElementById("shopModal").style.display = "none";
+    });
+
+    // 称号トグル
+    document.getElementById("rankBtn").addEventListener("click", () => {
+      const list = document.getElementById("rankList");
+      list.style.display = list.style.display === "none" ? "block" : "none";
     });
   </script>
 </body>
