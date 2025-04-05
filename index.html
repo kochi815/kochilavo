@@ -53,12 +53,11 @@
       color: white;
       font-weight: bold;
       cursor: pointer;
-      /* タッチ操作のための大きめエリア確保 */\n      min-width: 120px;
+      min-width: 120px;
     }
     button:hover {
       background-color: #ff9933;
     }
-    /* iPad/iPhone向けの調整 */
     @media (max-width: 768px) {
       h1 { font-size: 1.8em; }
       #question { font-size: 2em; }
@@ -99,6 +98,7 @@
 
     const equipped = { cat: "😺", hat: "🎩", bg: "🌈" };
 
+    // 敵リスト（Lv1〜30）: HPはレベルに応じて上昇
     const enemyList = Array.from({ length: 30 }, (_, i) => {
       const level = i + 1;
       return {
@@ -167,6 +167,16 @@
       showQuestion();
     }
 
+    // ここで、入力欄の内容を監視して、正解なら自動で回答処理を行う
+    answerInput.addEventListener("input", () => {
+      if (startBtn.style.display !== "none") return; // バトル中のみ有効
+      const p = problems[index];
+      if (!p) return;
+      if (parseInt(answerInput.value) === p.a) {
+        handleAnswer();
+      }
+    });
+
     function startBattle() {
       const enemy = enemyList[currentStage - 1];
       enemyHP = enemy.hp;
@@ -194,26 +204,7 @@
           startBtn.textContent = `次の敵 (Lv${currentStage}) と戦う！`;
           startBtn.style.display = "inline-block";
         }
-      } else if (playerHP <= 0) {
-        battleLog.textContent = "敗北...また挑戦してね！";
-        startBtn.textContent = "再挑戦！";
-        startBtn.style.display = "inline-block";
-      } else {
-        battleLog.textContent = "戦闘終了!";
-        startBtn.style.display = "inline-block";
-      }
-      questionDiv.textContent = "";
+      } else if (playerHP <= 0) {\n        battleLog.textContent = "敗北...また挑戦してね！";\n        startBtn.textContent = "再挑戦！";\n        startBtn.style.display = "inline-block";\n      } else {\n        battleLog.textContent = "戦闘終了!";\n        startBtn.style.display = "inline-block";\n      }\n      questionDiv.textContent = \"\";\n    }\n\n    startBtn.addEventListener(\"click\", () => {\n      startBattle();\n    });\n\n    // Enterキーでも回答可能\n    answerInput.addEventListener(\"keydown\", (e) => {\n      if (e.key === \"Enter\" && startBtn.style.display === \"none\") {\n        handleAnswer();\n      }\n    });\n  </script>\n</body>\n</html>"
     }
-
-    startBtn.addEventListener("click", () => {
-      startBattle();
-    });
-
-    answerInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && startBtn.style.display === "none") {
-        handleAnswer();
-      }
-    });
-  </script>
-</body>
-</html>
+  ]
+}
