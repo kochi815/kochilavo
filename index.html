@@ -8,108 +8,81 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            text-align: center;
-            background-color: #fdf6e3; /* 通常背景 */
-            margin: 0;
-            padding: 15px;
-            transition: background-color 0.3s ease-out; /* 背景色変化を少しゆっくりに */
-            position: relative; /* フィードバック表示の位置基準用 */
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
-        /* ボス戦用背景クラス */
-        body.boss-battle-bg {
-            background-color: #ffebee; /* 薄い赤紫系 */
-        }
+        /* --- 基本スタイル等（変更点はコメント） --- */
+        body { /* ... 省略 ... */ font-family: 'M PLUS Rounded 1c', sans-serif; text-align: center; background-color: #fdf6e3; margin: 0; padding: 15px; transition: background-color 0.3s ease-out; position: relative; min-height: 100vh; box-sizing: border-box; }
+        body.boss-battle-bg { background-color: #ffebee; }
+        h1 { /* ... 省略 ... */ font-size: 1.8em; color: #d35400; margin-bottom: 10px; }
 
-        h1 { font-size: 1.8em; color: #d35400; margin-bottom: 10px; }
-
-        #battleScreen { display: none; flex-direction: column; align-items: center; gap: 10px; }
-        .character-area { border: 2px solid #eee; border-radius: 10px; padding: 10px; margin: 5px 0; width: 90%; max-width: 400px; background-color: rgba(255, 255, 255, 0.8); box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative; /* 撃破演出用 */ }
-        #enemyArea { border-color: #e74c3c; }
-        #playerArea { border-color: #3498db; }
-        .character-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-weight: bold; }
+        #battleScreen { /* ... 省略 ... */ display: none; flex-direction: column; align-items: center; gap: 10px; }
+        .character-area { /* ... 省略 ... */ border: 2px solid #eee; border-radius: 10px; padding: 10px; margin: 5px 0; width: 90%; max-width: 400px; background-color: rgba(255, 255, 255, 0.8); box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative; }
+        #enemyArea { border-color: #e74c3c; } #playerArea { border-color: #3498db; }
+        .character-info { /* ... 省略 ... */ display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-weight: bold; }
         .character-name { font-size: 1.1em; } .character-hp-text { font-size: 1em; }
-        .hp-bar-container { height: 15px; background-color: #eee; border-radius: 8px; overflow: hidden; border: 1px solid #ddd; }
-        .hp-bar { height: 100%; width: 100%; border-radius: 6px; transition: width 0.3s ease-in-out; }
-        #enemyArea .hp-bar { background-color: #f44336; }
-        #playerArea .hp-bar { background-color: #4caf50; }
-        .character-display {
-            font-size: 3em; margin: 5px 0;
-            transition: transform 0.1s ease-in-out, opacity 0.3s ease-out; /* 撃破アニメーション用 */
-            opacity: 1; /* 通常は表示 */
-        }
-        /* 敵撃破用アニメーションクラス */
-        .character-display.defeated {
-            opacity: 0;
-            transform: scale(0.5) rotate(30deg);
-        }
-
-        #question { font-size: 2.2em; margin: 15px 0; color: #2c3e50; font-weight: 700; min-height: 1.3em; }
-        #answerChoices { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; margin-bottom: 10px; }
-        .choice-btn { font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 1.3em; padding: 10px 18px; border-radius: 8px; border: 2px solid #f39c12; background-color: #fff; color: #333; cursor: pointer; min-width: 70px; transition: background-color 0.2s, transform 0.1s; }
-        .choice-btn:hover:not(:disabled) { background-color: #fef9e7; }
-        .choice-btn:active:not(:disabled) { transform: scale(0.96); }
+        .hp-bar-container { /* ... 省略 ... */ height: 15px; background-color: #eee; border-radius: 8px; overflow: hidden; border: 1px solid #ddd; }
+        .hp-bar { /* ... 省略 ... */ height: 100%; width: 100%; border-radius: 6px; transition: width 0.3s ease-in-out; }
+        #enemyArea .hp-bar { background-color: #f44336; } #playerArea .hp-bar { background-color: #4caf50; }
+        .character-display { /* ... 省略 ... */ font-size: 3em; margin: 5px 0; transition: transform 0.1s ease-in-out, opacity 0.3s ease-out; opacity: 1; }
+        .character-display.defeated { opacity: 0; transform: scale(0.5) rotate(30deg); }
+        #question { /* ... 省略 ... */ font-size: 2.2em; margin: 15px 0; color: #2c3e50; font-weight: 700; min-height: 1.3em; }
+        #answerChoices { /* ... 省略 ... */ display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; margin-bottom: 10px; }
+        .choice-btn { /* ... 省略 ... */ font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 1.3em; padding: 10px 18px; border-radius: 8px; border: 2px solid #f39c12; background-color: #fff; color: #333; cursor: pointer; min-width: 70px; transition: background-color 0.2s, transform 0.1s; }
+        .choice-btn:hover:not(:disabled) { background-color: #fef9e7; } .choice-btn:active:not(:disabled) { transform: scale(0.96); }
         .choice-btn:disabled { background-color: #eee; border-color: #ccc; color: #aaa; cursor: not-allowed; }
-        #battleLog { font-size: 1.1em; min-height: 1.5em; margin: 10px 0; color: #c0392b; font-weight: bold; }
-        #startBtn { font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 1.1em; padding: 10px 30px; margin: 15px 0 5px 0; border-radius: 20px; border: none; background-color: #e67e22; color: white; font-weight: bold; cursor: pointer; min-width: 160px; transition: background-color 0.2s, transform 0.1s; }
-        #startBtn:hover { background-color: #d35400; }
-        #startBtn:active { transform: scale(0.97); }
+        #battleLog { /* ... 省略 ... */ font-size: 1.1em; min-height: 1.5em; margin: 10px 0; color: #c0392b; font-weight: bold; }
+        #startBtn { /* ... 省略 ... */ font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 1.1em; padding: 10px 30px; margin: 15px 0 5px 0; border-radius: 20px; border: none; background-color: #e67e22; color: white; font-weight: bold; cursor: pointer; min-width: 160px; transition: background-color 0.2s, transform 0.1s; }
+        #startBtn:hover { background-color: #d35400; } #startBtn:active { transform: scale(0.97); }
+        #feedbackDisplay { /* ... 省略 ... */ position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%) scale(0.8); font-size: 3em; font-weight: bold; color: #fff; background-color: rgba(0, 0, 0, 0.6); padding: 10px 25px; border-radius: 15px; opacity: 0; transition: opacity 0.2s ease-out, transform 0.2s ease-out; pointer-events: none; z-index: 10; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        #feedbackDisplay.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        #feedbackDisplay.critical { color: #ffeb3b; } #feedbackDisplay.perfect { color: #81d4fa; } #feedbackDisplay.great { color: #a5d6a7; } #feedbackDisplay.good { color: #fff; } #feedbackDisplay.slow { color: #ef9a9a; } #feedbackDisplay.wrong { color: #f44336; background-color: rgba(255, 255, 255, 0.8); text-shadow: none;}
 
-        /* --- 時間評価表示用スタイル --- */
-        #feedbackDisplay {
-            position: absolute; /* 画面中央に固定 */
-            top: 45%; /* 上下中央やや上 */
+        /* --- コンボ表示用スタイル --- */
+        #comboDisplay {
+            position: absolute;
+            top: 60%; /* 位置調整 */
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.8); /* 中央揃え & 初期は少し小さい */
-            font-size: 3em;
+            transform: translateX(-50%);
+            font-size: 2.5em;
             font-weight: bold;
-            color: #fff;
-            background-color: rgba(0, 0, 0, 0.6);
-            padding: 10px 25px;
-            border-radius: 15px;
-            opacity: 0; /* 初期は透明 */
-            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-            pointer-events: none; /* クリックを透過 */
-            z-index: 10; /* 最前面に */
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            color: #ff9800; /* オレンジ */
+            opacity: 0;
+            transition: opacity 0.2s, transform 0.2s;
+            pointer-events: none;
+            z-index: 5;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
-        #feedbackDisplay.show {
+        #comboDisplay.show {
             opacity: 1;
-            transform: translate(-50%, -50%) scale(1); /* 表示時に元のサイズに */
+            animation: comboBounce 0.3s ease-out; /* 表示時にアニメーション */
         }
-        /* 評価別カラー */
-        #feedbackDisplay.critical { color: #ffeb3b; } /* 黄色 */
-        #feedbackDisplay.perfect { color: #81d4fa; } /* 水色 */
-        #feedbackDisplay.great { color: #a5d6a7; } /* 緑 */
-        #feedbackDisplay.good { color: #fff; } /* 白 */
-        #feedbackDisplay.slow { color: #ef9a9a; } /* 赤 */
-        #feedbackDisplay.wrong { color: #f44336; background-color: rgba(255, 255, 255, 0.8); text-shadow: none;} /* 赤文字・白背景 */
+        #comboDisplay.great-combo { color: #f44336; } /* 5コンボ以上 */
+        #comboDisplay.amazing-combo { color: #9c27b0; } /* 10コンボ以上 */
 
+        /* コンボ数アニメーション */
+        @keyframes comboBounce {
+            0% { transform: translateX(-50%) scale(0.8); }
+            50% { transform: translateX(-50%) scale(1.1); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
 
-        /* --- その他アニメーション・フィードバック --- */
+        /* --- その他アニメーション --- */
         @keyframes shake { /* 変更なし */ 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 50% { transform: translateX(3px); } 75% { transform: translateX(-3px); } }
         .shake-animation { animation: shake 0.2s ease-in-out; }
-        /* 背景フラッシュ用 */
-        body.feedback-flash { background-color: #fff3e0; } /* 一瞬明るいオレンジに */
+        body.feedback-flash { background-color: #fff3e0; }
 
-        @media (max-width: 600px) {
-             h1 { font-size: 1.6em; }
-             .character-display { font-size: 2.5em; }
-             #question { font-size: 1.8em; }
-             .choice-btn { font-size: 1.1em; padding: 8px 15px; min-width: 60px; }
-             #startBtn { font-size: 1em; padding: 10px 25px; min-width: 140px; }
-             #battleLog { font-size: 1em; }
-             #feedbackDisplay { font-size: 2.5em; padding: 8px 20px;}
-         }
+        @media (max-width: 600px) { /* ... 省略 ... */ h1 { font-size: 1.6em; } .character-display { font-size: 2.5em; } #question { font-size: 1.8em; } .choice-btn { font-size: 1.1em; padding: 8px 15px; min-width: 60px; } #startBtn { font-size: 1em; padding: 10px 25px; min-width: 140px; } #battleLog { font-size: 1em; } #feedbackDisplay { font-size: 2.5em; padding: 8px 20px;} #comboDisplay { font-size: 2em; top: 55%; } }
+
+        /* モード選択画面スタイル (省略) */
+         #modeSelectScreen { padding-top: 50px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+         #modeSelectScreen h2 { font-size: 1.5em; color: #555; }
+         .mode-btn { font-family: 'M PLUS Rounded 1c', sans-serif; font-size: 1.4em; padding: 15px 40px; border-radius: 25px; border: none; color: white; font-weight: bold; cursor: pointer; min-width: 250px; transition: background-color 0.2s, transform 0.1s; }
+         #grade1ModeBtn { background-color: #87cefa; } #grade4ModeBtn { background-color: #ffcc80; }
+         #grade1ModeBtn:hover { background-color: #5abcd8; } #grade4ModeBtn:hover { background-color: #ffa726; }
+         .mode-btn:active { transform: scale(0.97); }
 
     </style>
 </head>
 <body>
     <h1>ねこバトルチャレンジ</h1>
-
     <div id="modeSelectScreen">
         <h2>モードを選んでね！</h2>
         <button id="grade1ModeBtn" class="mode-btn">🎒 しょうがく１ねんせい</button>
@@ -117,129 +90,107 @@
     </div>
 
     <div id="battleScreen">
-        <div id="enemyArea" class="character-area">
-             <div class="character-info"> <span class="character-name" id="enemyName"></span> <span class="character-hp-text">HP: <span id="enemyHPText"></span></span> </div>
-             <div class="hp-bar-container"> <div class="hp-bar" id="enemyHPBar"></div> </div>
-             <div class="character-display" id="enemyCharacter"></div>
-        </div>
-        <div id="questionArea">
-            <div id="question"></div> <div id="answerChoices"></div>
-        </div>
-        <div id="playerArea" class="character-area">
-             <div class="character-display" id="playerCharacter">😺</div>
-             <div class="hp-bar-container"> <div class="hp-bar" id="playerHPBar"></div> </div>
-             <div class="character-info"> <span class="character-name">にゃんたろう</span> <span class="character-hp-text">HP: <span id="playerHPText"></span></span> </div>
-        </div>
-        <div id="infoArea">
-            <div id="battleLog"></div> <button id="startBtn"></button>
-        </div>
+        <div id="enemyArea" class="character-area"> <div class="character-info"> <span class="character-name" id="enemyName"></span> <span class="character-hp-text">HP: <span id="enemyHPText"></span></span> </div> <div class="hp-bar-container"> <div class="hp-bar" id="enemyHPBar"></div> </div> <div class="character-display" id="enemyCharacter"></div> </div>
+         <div id="questionArea"> <div id="question"></div> <div id="answerChoices"></div> </div>
+         <div id="playerArea" class="character-area"> <div class="character-display" id="playerCharacter">😺</div> <div class="hp-bar-container"> <div class="hp-bar" id="playerHPBar"></div> </div> <div class="character-info"> <span class="character-name">にゃんたろう</span> <span class="character-hp-text">HP: <span id="playerHPText"></span></span> </div> </div>
+         <div id="infoArea"> <div id="battleLog"></div> <button id="startBtn"></button> </div>
     </div>
 
     <div id="feedbackDisplay"></div>
+    <div id="comboDisplay"></div>
 
   <script>
     const totalQuestionsPerStage = 10;
-    let currentStage = 1;
-    let gameMode = '';
-    let playerMaxHP = 15;
-    let playerHP = playerMaxHP;
-    let currentEnemy = {};
-    let enemyMaxHP = 10;
-    let enemyHP = enemyMaxHP;
-    let problems = [];
-    let currentProblemIndex = 0;
-    let questionStartTime;
-    let battleInProgress = false;
-    let comboCount = 0;
+    let currentStage = 1; let gameMode = ''; let playerMaxHP = 15; let playerHP = playerMaxHP;
+    let currentEnemy = {}; let enemyMaxHP = 10; let enemyHP = enemyMaxHP;
+    let problems = []; let currentProblemIndex = 0; let questionStartTime;
+    let battleInProgress = false; let comboCount = 0;
 
     // DOM要素取得
-    const modeSelectScreen = document.getElementById("modeSelectScreen");
-    const grade1ModeBtn = document.getElementById("grade1ModeBtn");
-    const grade4ModeBtn = document.getElementById("grade4ModeBtn");
-    const battleScreen = document.getElementById("battleScreen");
-    const startBtn = document.getElementById("startBtn");
-    const questionDiv = document.getElementById("question");
-    const answerChoicesDiv = document.getElementById("answerChoices");
-    const battleLog = document.getElementById("battleLog");
-    const enemyArea = document.getElementById("enemyArea");
-    const enemyName = document.getElementById("enemyName");
-    const enemyHPText = document.getElementById("enemyHPText");
-    const enemyHPBar = document.getElementById("enemyHPBar");
-    const enemyCharacter = document.getElementById("enemyCharacter");
-    const playerArea = document.getElementById("playerArea");
-    const playerHPText = document.getElementById("playerHPText");
-    const playerHPBar = document.getElementById("playerHPBar");
-    const playerCharacter = document.getElementById("playerCharacter");
-    const feedbackDisplay = document.getElementById("feedbackDisplay"); // ★追加: 時間評価表示用
+    const modeSelectScreen = document.getElementById("modeSelectScreen"); const grade1ModeBtn = document.getElementById("grade1ModeBtn"); const grade4ModeBtn = document.getElementById("grade4ModeBtn"); const battleScreen = document.getElementById("battleScreen"); const startBtn = document.getElementById("startBtn"); const questionDiv = document.getElementById("question"); const answerChoicesDiv = document.getElementById("answerChoices"); const battleLog = document.getElementById("battleLog"); const enemyArea = document.getElementById("enemyArea"); const enemyName = document.getElementById("enemyName"); const enemyHPText = document.getElementById("enemyHPText"); const enemyHPBar = document.getElementById("enemyHPBar"); const enemyCharacter = document.getElementById("enemyCharacter"); const playerArea = document.getElementById("playerArea"); const playerHPText = document.getElementById("playerHPText"); const playerHPBar = document.getElementById("playerHPBar"); const playerCharacter = document.getElementById("playerCharacter"); const feedbackDisplay = document.getElementById("feedbackDisplay");
+    const comboDisplay = document.getElementById("comboDisplay"); // ★追加: コンボ表示用
 
-    const enemies = { /* ... 敵データ定義は省略 (前のコードと同じ) ... */ 1: { name: "スライム", emoji: "💧", hp: 10, type: "normal" }, 2: { name: "スライム", emoji: "💧", hp: 13, type: "normal" }, 3: { name: "コウモリ", emoji: "🦇", hp: 16, type: "normal" }, 4: { name: "コウモリ", emoji: "🦇", hp: 20, type: "normal" }, 5: { name: "ボス ゴブリン", emoji: "👺", hp: 30, type: "boss" }, 6: { name: "ゴースト", emoji: "👻", hp: 25, type: "normal" }, 7: { name: "ゴースト", emoji: "👻", hp: 30, type: "normal" }, 8: { name: "スケルトン", emoji: "💀", hp: 35, type: "normal" }, 9: { name: "スケルトン", emoji: "💀", hp: 40, type: "normal" }, 10: { name: "ボス サイクロプス", emoji: "👁️", hp: 55, type: "boss" }, 11: { name: "ゾンビ", emoji: "🧟", hp: 45, type: "normal" }, 12: { name: "ゾンビ", emoji: "🧟", hp: 50, type: "normal" }, 13: { name: "ミノタウロス", emoji: "🐂", hp: 58, type: "normal" }, 14: { name: "ミノタウロス", emoji: "🐂", hp: 65, type: "normal" }, 15: { name: "ボス ドラゴン", emoji: "🐉", hp: 85, type: "boss" } };
+    // --- 効果音の準備 ---
+    // ★★★ 注意: 実際の音声ファイルへのパスに書き換えてください ★★★
+    // ★★★ 著作権フリーまたは利用許諾のある音源を使用してください ★★★
+    const sounds = {
+        correct: new Audio('sounds/correct.mp3'),
+        wrong: new Audio('sounds/wrong.mp3'),
+        hitEnemy: new Audio('sounds/hit_enemy.mp3'),
+        hitPlayer: new Audio('sounds/hit_player.mp3'),
+        enemyDefeated: new Audio('sounds/enemy_defeated.mp3'),
+        // victory: new Audio('sounds/victory.mp3'), // 必要なら追加
+        // defeat: new Audio('sounds/defeat.mp3'),   // 必要なら追加
+        // tap: new Audio('sounds/tap.mp3')           // 必要なら追加
+    };
+
+    // 音再生ヘルパー (エラーハンドリング付き)
+    function playSound(soundName) {
+        const sound = sounds[soundName];
+        if (sound) {
+            sound.currentTime = 0; // 再生位置リセット
+            sound.play().catch(error => console.log(`Sound play failed (${soundName}):`, error));
+        }
+    }
+
+    const enemies = { /* ... 敵データ省略 ... */ 1: { name: "スライム", emoji: "💧", hp: 10, type: "normal" }, 2: { name: "スライム", emoji: "💧", hp: 13, type: "normal" }, 3: { name: "コウモリ", emoji: "🦇", hp: 16, type: "normal" }, 4: { name: "コウモリ", emoji: "🦇", hp: 20, type: "normal" }, 5: { name: "ボス ゴブリン", emoji: "👺", hp: 30, type: "boss" }, 6: { name: "ゴースト", emoji: "👻", hp: 25, type: "normal" }, 7: { name: "ゴースト", emoji: "👻", hp: 30, type: "normal" }, 8: { name: "スケルトン", emoji: "💀", hp: 35, type: "normal" }, 9: { name: "スケルトン", emoji: "💀", hp: 40, type: "normal" }, 10: { name: "ボス サイクロプス", emoji: "👁️", hp: 55, type: "boss" }, 11: { name: "ゾンビ", emoji: "🧟", hp: 45, type: "normal" }, 12: { name: "ゾンビ", emoji: "🧟", hp: 50, type: "normal" }, 13: { name: "ミノタウロス", emoji: "🐂", hp: 58, type: "normal" }, 14: { name: "ミノタウロス", emoji: "🐂", hp: 65, type: "normal" }, 15: { name: "ボス ドラゴン", emoji: "🐉", hp: 85, type: "boss" } };
     const maxStage = Object.keys(enemies).length;
 
     // 問題生成関数 (変更なし)
-    function generateProblems(stage, mode) { /* ... 省略 (前のコードと同じ) ... */ const generatedProblems = []; const count = totalQuestionsPerStage; let num1, num2, answer, questionText, type; for (let i = 0; i < count; i++) { if (mode === 'grade1') { if (stage <= 5) { type = '+'; do { num1 = Math.floor(Math.random() * 10); num2 = Math.floor(Math.random() * (10 - num1)); } while (num1 === 0 && num2 === 0); answer = num1 + num2; } else if (stage <= 10) { type = '+'; num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * 10) + 1; answer = num1 + num2; } else { type = '-'; num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * num1) + 1; answer = num1 - num2; } } else { if (stage <= 4) { type = '+'; num1 = Math.floor(Math.random() * 9) + 1; num2 = Math.floor(Math.random() * 9) + 1; answer = num1 + num2; } else if (stage <= 8) { type = '-'; num1 = Math.floor(Math.random() * 18) + 1; num2 = Math.floor(Math.random() * num1) + 1; answer = num1 - num2; } else if (stage <= 12) { type = '×'; num1 = Math.floor(Math.random() * 8) + 2; num2 = Math.floor(Math.random() * 8) + 2; answer = num1 * num2; } else { type = '÷'; num2 = Math.floor(Math.random() * 8) + 2; answer = Math.floor(Math.random() * 8) + 2; num1 = num2 * answer; } } questionText = `${num1} ${type} ${num2}`; generatedProblems.push({ q: questionText, a: answer }); } for (let i = generatedProblems.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [generatedProblems[i], generatedProblems[j]] = [generatedProblems[j], generatedProblems[i]]; } return generatedProblems; }
+    function generateProblems(stage, mode) { /* ... 省略 ... */ const generatedProblems = []; const count = totalQuestionsPerStage; let num1, num2, answer, questionText, type; for (let i = 0; i < count; i++) { if (mode === 'grade1') { if (stage <= 5) { type = '+'; do { num1 = Math.floor(Math.random() * 10); num2 = Math.floor(Math.random() * (10 - num1)); } while (num1 === 0 && num2 === 0); answer = num1 + num2; } else if (stage <= 10) { type = '+'; num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * 10) + 1; answer = num1 + num2; } else { type = '-'; num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * num1) + 1; answer = num1 - num2; } } else { if (stage <= 4) { type = '+'; num1 = Math.floor(Math.random() * 9) + 1; num2 = Math.floor(Math.random() * 9) + 1; answer = num1 + num2; } else if (stage <= 8) { type = '-'; num1 = Math.floor(Math.random() * 18) + 1; num2 = Math.floor(Math.random() * num1) + 1; answer = num1 - num2; } else if (stage <= 12) { type = '×'; num1 = Math.floor(Math.random() * 8) + 2; num2 = Math.floor(Math.random() * 8) + 2; answer = num1 * num2; } else { type = '÷'; num2 = Math.floor(Math.random() * 8) + 2; answer = Math.floor(Math.random() * 8) + 2; num1 = num2 * answer; } } questionText = `${num1} ${type} ${num2}`; generatedProblems.push({ q: questionText, a: answer }); } for (let i = generatedProblems.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [generatedProblems[i], generatedProblems[j]] = [generatedProblems[j], generatedProblems[i]]; } return generatedProblems; }
     // 選択肢生成関数 (変更なし)
-    function generateChoices(correct) { /* ... 省略 (前のコードと同じ) ... */ const choices = new Set(); choices.add(correct); let attempts = 0; while (choices.size < 6 && attempts < 50) { const delta = Math.floor(Math.random() * 10) - 5 + (Math.random() < 0.5 ? 10 : -10); const choice = correct + delta; if (choice !== correct && choice >= 0 && !choices.has(choice)) { choices.add(choice); } attempts++; } while (choices.size < 6) { choices.add(Math.max(0, correct + choices.size + Math.floor(Math.random()*3))); } const choiceArray = Array.from(choices); choiceArray.sort(() => Math.random() - 0.5); return choiceArray; }
+    function generateChoices(correct) { /* ... 省略 ... */ const choices = new Set(); choices.add(correct); let attempts = 0; while (choices.size < 6 && attempts < 50) { const delta = Math.floor(Math.random() * 10) - 5 + (Math.random() < 0.5 ? 10 : -10); const choice = correct + delta; if (choice !== correct && choice >= 0 && !choices.has(choice)) { choices.add(choice); } attempts++; } while (choices.size < 6) { choices.add(Math.max(0, correct + choices.size + Math.floor(Math.random()*3))); } const choiceArray = Array.from(choices); choiceArray.sort(() => Math.random() - 0.5); return choiceArray; }
     // HPバー更新関数 (変更なし)
-    function updateHPBar(elementId, currentHP, maxHP) { /* ... 省略 (前のコードと同じ) ... */ const bar = document.getElementById(elementId); const percentage = Math.max(0, (currentHP / maxHP) * 100); bar.style.width = `${percentage}%`; }
+    function updateHPBar(elementId, currentHP, maxHP) { /* ... 省略 ... */ const bar = document.getElementById(elementId); const percentage = Math.max(0, (currentHP / maxHP) * 100); bar.style.width = `${percentage}%`; }
     // キャラ揺れ関数 (変更なし)
-    function shakeCharacter(elementId) { /* ... 省略 (前のコードと同じ) ... */ const characterElement = document.getElementById(elementId); characterElement.classList.add('shake-animation'); setTimeout(() => { characterElement.classList.remove('shake-animation'); }, 200); }
+    function shakeCharacter(elementId) { /* ... 省略 ... */ const characterElement = document.getElementById(elementId); characterElement.classList.add('shake-animation'); setTimeout(() => { characterElement.classList.remove('shake-animation'); }, 200); }
+    // 時間評価表示関数 (変更なし)
+    function showFeedback(text, type) { feedbackDisplay.textContent = text; feedbackDisplay.className = 'show ' + type; setTimeout(() => { feedbackDisplay.className = ''; }, 800); }
 
-    // --- 時間評価表示関数 ---
-    function showFeedback(text, type) {
-        feedbackDisplay.textContent = text;
-        // 前のクラスを削除し、新しいクラスを設定
-        feedbackDisplay.className = 'show ' + type; // typeは 'critical', 'perfect' などCSSクラス名
-        // 一定時間後に非表示
-        setTimeout(() => {
-            feedbackDisplay.className = ''; // クラスをすべて削除して非表示＆スタイルリセット
-        }, 800); // 0.8秒表示
+    // --- コンボ表示更新関数 ---
+    function updateComboDisplay() {
+        if (comboCount >= 3) { // 3コンボ以上で表示
+            comboDisplay.textContent = `${comboCount} Combo!`;
+            comboDisplay.classList.remove('great-combo', 'amazing-combo'); // 前のクラスを削除
+            if (comboCount >= 10) {
+                comboDisplay.classList.add('amazing-combo'); // 10コンボ以上
+            } else if (comboCount >= 5) {
+                comboDisplay.classList.add('great-combo'); // 5コンボ以上
+            }
+            comboDisplay.classList.add('show'); // 表示クラスとアニメーション
+        } else {
+            comboDisplay.classList.remove('show'); // 2コンボ以下は非表示
+        }
     }
 
-    function showQuestion() { /* ... 前回のコードから変更なし ... */ battleInProgress = false; if (currentProblemIndex >= problems.length || playerHP <= 0 || enemyHP <= 0) { endBattle(); return; } const p = problems[currentProblemIndex]; questionDiv.textContent = p.q; questionStartTime = Date.now(); battleLog.textContent = `Lv${currentStage} (${currentProblemIndex + 1}/${totalQuestionsPerStage}) 問題！`; const choices = generateChoices(p.a); answerChoicesDiv.innerHTML = ""; choices.forEach(choice => { const btn = document.createElement("button"); btn.textContent = choice; btn.className = "choice-btn"; btn.onclick = () => handleAnswer(choice); answerChoicesDiv.appendChild(btn); }); }
+
+    function showQuestion() { /* ... 変更なし ... */ battleInProgress = false; if (currentProblemIndex >= problems.length || playerHP <= 0 || enemyHP <= 0) { endBattle(); return; } const p = problems[currentProblemIndex]; questionDiv.textContent = p.q; questionStartTime = Date.now(); battleLog.textContent = `Lv${currentStage} (${currentProblemIndex + 1}/${totalQuestionsPerStage}) 問題！`; const choices = generateChoices(p.a); answerChoicesDiv.innerHTML = ""; choices.forEach(choice => { const btn = document.createElement("button"); btn.textContent = choice; btn.className = "choice-btn"; btn.onclick = () => handleAnswer(choice); answerChoicesDiv.appendChild(btn); }); }
 
     function handleAnswer(selectedAnswer) {
         if (battleInProgress) return;
         battleInProgress = true;
         const choiceButtons = answerChoicesDiv.querySelectorAll('.choice-btn');
         choiceButtons.forEach(btn => btn.disabled = true);
+        // playSound('tap'); // ★追加?: ボタンタップ音
 
         const elapsed = (Date.now() - questionStartTime) / 1000;
         const p = problems[currentProblemIndex];
         let feedbackClass = ''; let damageToEnemy = 0; let damageToPlayer = 0;
-        let logMessage = "";
-        let feedbackText = ""; // ★追加: 画面中央用テキスト
-        let feedbackType = ""; // ★追加: 画面中央用CSSクラス
+        let logMessage = ""; let feedbackText = ""; let feedbackType = "";
 
-        // モード別基準値 (変更なし)
         let criticalTime, perfectTime, greatTime, goodTime, slowPenalty, wrongPenalty;
         if (gameMode === 'grade1') { criticalTime = 1.5; perfectTime = 2.5; greatTime = 4.0; goodTime = 6.0; slowPenalty = 1; wrongPenalty = 2; }
         else { criticalTime = 0.8; perfectTime = 1.5; greatTime = 2.5; goodTime = 4.0; slowPenalty = 2; wrongPenalty = 3; }
 
         if (selectedAnswer === p.a) { // 正解
+            playSound('correct'); // ★追加: 正解音
             comboCount++;
             let baseDamage = 0;
-            if (elapsed < criticalTime) {
-                baseDamage = (gameMode === 'grade1' ? 5 : 6);
-                logMessage = `✨Critical Hit!✨ (${elapsed.toFixed(1)}秒) `;
-                feedbackText = "Critical Hit!"; feedbackType = "critical"; // ★追加
-            } else if (elapsed < perfectTime) {
-                baseDamage = (gameMode === 'grade1' ? 3 : 4);
-                logMessage = `Perfect! (${elapsed.toFixed(1)}秒) `;
-                feedbackText = "Perfect!"; feedbackType = "perfect"; // ★追加
-            } else if (elapsed < greatTime) {
-                baseDamage = (gameMode === 'grade1' ? 2 : 2);
-                logMessage = `Great! (${elapsed.toFixed(1)}秒) `;
-                feedbackText = "Great!"; feedbackType = "great"; // ★追加
-            } else if (elapsed < goodTime) {
-                baseDamage = 1;
-                logMessage = `Good (${elapsed.toFixed(1)}秒) `;
-                feedbackText = "Good"; feedbackType = "good"; // ★追加
-            } else {
-                damageToPlayer = slowPenalty;
-                logMessage = `Too slow... (${elapsed.toFixed(1)}秒) 自分に${damageToPlayer}ダメージ!`;
-                feedbackText = "Too Slow..."; feedbackType = "slow"; // ★追加
-                comboCount = 0;
-            }
+            if (elapsed < criticalTime) { baseDamage = (gameMode === 'grade1' ? 5 : 6); logMessage = `✨Critical Hit!✨ (${elapsed.toFixed(1)}秒) `; feedbackText = "Critical Hit!"; feedbackType = "critical"; /*playSound('critical');*/ } // ★追加?: クリティカル音
+            else if (elapsed < perfectTime) { baseDamage = (gameMode === 'grade1' ? 3 : 4); logMessage = `Perfect! (${elapsed.toFixed(1)}秒) `; feedbackText = "Perfect!"; feedbackType = "perfect"; }
+            else if (elapsed < greatTime) { baseDamage = (gameMode === 'grade1' ? 2 : 2); logMessage = `Great! (${elapsed.toFixed(1)}秒) `; feedbackText = "Great!"; feedbackType = "great"; }
+            else if (elapsed < goodTime) { baseDamage = 1; logMessage = `Good (${elapsed.toFixed(1)}秒) `; feedbackText = "Good"; feedbackType = "good"; }
+            else { damageToPlayer = slowPenalty; logMessage = `Too slow... (${elapsed.toFixed(1)}秒) 自分に${damageToPlayer}ダメージ!`; feedbackText = "Too Slow..."; feedbackType = "slow"; comboCount = 0; }
 
             let comboBonus = 0;
             if (comboCount >= 5) comboBonus = 2; else if (comboCount >= 3) comboBonus = 1;
@@ -248,35 +199,28 @@
             if(damageToEnemy > 0) {
                  logMessage += `敵に${damageToEnemy}ダメージ!`;
                  if (comboCount >= 3) logMessage += ` (${comboCount} Combo!)`;
-                 feedbackClass = 'feedback-flash'; // ★変更: ヒット時はフラッシュ
-                 shakeCharacter('enemyCharacter');
+                 feedbackClass = 'feedback-flash'; shakeCharacter('enemyCharacter');
+                 playSound('hitEnemy'); // ★追加: 敵ヒット音
             } else if (damageToPlayer > 0) {
-                feedbackClass = 'feedback-damage-player'; // 自分ダメージは背景赤
-                shakeCharacter('playerCharacter');
-            } else { feedbackClass = 'feedback-correct'; } // Goodでダメージ0の場合
+                feedbackClass = 'feedback-damage-player'; shakeCharacter('playerCharacter');
+                playSound('hitPlayer'); // ★追加: 自分ヒット音
+            } else { feedbackClass = 'feedback-correct'; }
 
         } else { // 不正解
-            damageToPlayer = wrongPenalty;
-            logMessage = `Wrong! 自分に${damageToPlayer}ダメージ!`;
-            feedbackText = "Wrong!"; feedbackType = "wrong"; // ★追加
-            feedbackClass = 'feedback-wrong'; // 背景赤
-            comboCount = 0;
-            shakeCharacter('playerCharacter');
+            playSound('wrong'); // ★追加: 不正解音
+            damageToPlayer = wrongPenalty; logMessage = `Wrong! 自分に${damageToPlayer}ダメージ!`; feedbackText = "Wrong!"; feedbackType = "wrong";
+            feedbackClass = 'feedback-wrong'; comboCount = 0; shakeCharacter('playerCharacter');
+             playSound('hitPlayer'); // ★追加: 自分ヒット音
         }
+
+        updateComboDisplay(); // ★追加: コンボ表示更新
 
         enemyHP -= damageToEnemy; playerHP -= damageToPlayer;
         enemyHPText.textContent = Math.max(0, enemyHP); playerHPText.textContent = Math.max(0, playerHP);
         updateHPBar('enemyHPBar', enemyHP, enemyMaxHP); updateHPBar('playerHPBar', playerHP, playerMaxHP);
         battleLog.textContent = logMessage;
-
-        // 画面中央フィードバック表示
         if(feedbackText) showFeedback(feedbackText, feedbackType);
-
-        // 背景フラッシュフィードバック
-        if (feedbackClass) {
-            document.body.classList.add(feedbackClass);
-            setTimeout(() => { document.body.classList.remove(feedbackClass); }, 150); // ★変更: フラッシュ時間を短く(0.15s)
-        }
+        if (feedbackClass) { document.body.classList.add(feedbackClass); setTimeout(() => { document.body.classList.remove(feedbackClass); }, 150); }
 
         currentProblemIndex++;
         setTimeout(() => { if (playerHP <= 0 || enemyHP <= 0 || currentProblemIndex >= problems.length) { endBattle(); } else { showQuestion(); } }, 1000);
@@ -288,86 +232,63 @@
         if (gameMode === 'grade1') { enemyMaxHP = Math.max(5, Math.floor(enemyMaxHP * 0.7)); }
         enemyHP = enemyMaxHP;
         playerHP = playerMaxHP;
-        currentProblemIndex = 0; comboCount = 0;
+        currentProblemIndex = 0; comboCount = 0; updateComboDisplay(); // ★追加: コンボ表示リセット
         problems = generateProblems(currentStage, gameMode);
 
-        // --- 背景と敵表示の更新 ---
         enemyName.textContent = `${currentEnemy.emoji} ${currentEnemy.name} (Lv${currentStage})`;
         enemyHPText.textContent = enemyHP; playerHPText.textContent = playerHP;
         updateHPBar('enemyHPBar', enemyHP, enemyMaxHP); updateHPBar('playerHPBar', playerHP, playerMaxHP);
         enemyCharacter.textContent = currentEnemy.emoji;
-        enemyCharacter.classList.remove('defeated'); // ★追加: 念のため撃破状態解除
+        enemyCharacter.classList.remove('defeated'); // 撃破状態解除
 
-        // ボス戦の背景色とセリフ
+        // ボス戦演出
         if (currentEnemy.type === 'boss') {
-            document.body.classList.add('boss-battle-bg'); // ボス背景クラス追加
-            battleLog.textContent = `🔥ボス出現！ ${currentEnemy.name} があらわれた！🔥`;
+            document.body.classList.add('boss-battle-bg');
+            battleLog.textContent = `🔥ボス出現！ ${currentEnemy.name} があらわれた！🔥`; // セリフ表示
         } else {
-            document.body.classList.remove('boss-battle-bg'); // 通常背景に戻す
+            document.body.classList.remove('boss-battle-bg');
             battleLog.textContent = `Lv${currentStage} ${currentEnemy.name} があらわれた！`;
         }
-        // --- ここまで ---
 
         startBtn.style.display = "none";
         battleInProgress = false;
-        setTimeout(showQuestion, 1500); // ★変更: 登場演出の間を少し長く
+        setTimeout(showQuestion, 1500);
     }
 
     function endBattle() {
         battleInProgress = true;
-        answerChoicesDiv.innerHTML = "";
-        questionDiv.textContent = "Battle End!";
+        answerChoicesDiv.innerHTML = ""; questionDiv.textContent = "Battle End!";
+        comboDisplay.classList.remove('show'); // ★追加: コンボ表示を消す
 
-        let resultMessage = "";
-        let nextButtonText = "";
-        let isVictory = false; // 勝利フラグ
+        let resultMessage = ""; let nextButtonText = ""; let isVictory = false;
 
         if (enemyHP <= 0) { // 勝利
             isVictory = true;
-            // --- 敵撃破演出 ---
-            enemyCharacter.classList.add('defeated'); // フェードアウトクラス追加
-            // --- ここまで ---
+            playSound('enemyDefeated'); // ★追加: 敵撃破音
+            enemyCharacter.classList.add('defeated');
             resultMessage = `🎉勝利！ ${currentEnemy.name} をたおした！🎉`;
-             // ボス撃破時の特別メッセージ
-            if (currentEnemy.type === 'boss') {
-                 resultMessage += ` すごい！ボスを撃破したぞ！`;
-            }
+            if (currentEnemy.type === 'boss') { resultMessage += ` すごい！ボスを撃破したぞ！`; }
             currentStage++;
-            if (currentStage > maxStage) {
-                resultMessage += " 🏆全ステージクリア！おめでとう！🏆";
-                startBtn.style.display = "none";
-            } else {
-                nextButtonText = `次の敵 (Lv${currentStage}) と戦う！`;
-                startBtn.style.display = "inline-block";
-            }
+            if (currentStage > maxStage) { resultMessage += " 🏆全ステージクリア！おめでとう！🏆"; startBtn.style.display = "none"; /* playSound('victory'); */ } // ★追加?: 勝利音
+            else { nextButtonText = `次の敵 (Lv${currentStage}) と戦う！`; startBtn.style.display = "inline-block"; }
         } else { // 敗北 or 問題切れ
              resultMessage = playerHP <= 0 ? "😭敗北...また挑戦してね！" : "時間切れ...もう一度挑戦！";
-             nextButtonText = "再挑戦！";
-             startBtn.style.display = "inline-block";
+             nextButtonText = "再挑戦！"; startBtn.style.display = "inline-block";
+             // playSound('defeat'); // ★追加?: 敗北音
         }
 
         battleLog.textContent = resultMessage;
         if (nextButtonText) { startBtn.textContent = nextButtonText; }
 
-        // 勝利/敗北フィードバック (背景色)
         document.body.classList.add(isVictory ? 'feedback-correct' : 'feedback-wrong');
-        setTimeout(() => {
-            document.body.classList.remove('feedback-correct', 'feedback-wrong');
-            // 通常背景に戻す（ボス戦後など）
-            document.body.classList.remove('boss-battle-bg');
-        }, 1000); // 1秒表示
-
+        setTimeout(() => { document.body.classList.remove('feedback-correct', 'feedback-wrong', 'boss-battle-bg'); }, 1000);
     }
 
     // --- モード選択処理 (変更なし) ---
     function selectMode(selectedMode) { gameMode = selectedMode; modeSelectScreen.style.display = 'none'; battleScreen.style.display = 'flex'; currentStage = 1; startBattle(); }
-    grade1ModeBtn.addEventListener("click", () => selectMode('grade1'));
-    grade4ModeBtn.addEventListener("click", () => selectMode('grade4'));
-    startBtn.addEventListener("click", () => {
-        // 次へ/再挑戦ボタンが押されたら、敵の撃破状態をリセット
-        enemyCharacter.classList.remove('defeated');
-        startBattle();
-    });
+    grade1ModeBtn.addEventListener("click", () => { /* playSound('tap'); */ selectMode('grade1'); }); // ★追加?: ボタン音
+    grade4ModeBtn.addEventListener("click", () => { /* playSound('tap'); */ selectMode('grade4'); }); // ★追加?: ボタン音
+    startBtn.addEventListener("click", () => { /* playSound('tap'); */ enemyCharacter.classList.remove('defeated'); startBattle(); }); // ★追加?: ボタン音
 
     // 初期表示設定
     playerHPText.textContent = playerHP;
