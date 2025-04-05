@@ -1,342 +1,536 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ねこバトルチャレンジ</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'M PLUS Rounded 1c', sans-serif;
-      text-align: center;
-      background-color: #fdf6e3; /* 基本の背景色 */
-      margin: 0;
-      padding: 20px;
-      transition: background-color 0.15s ease-out; /* 修正点3: 背景色変化用トランジション */
-    }
-    h1 {
-      font-size: 2em;
-      color: #d35400; /* オレンジ系 */
-      margin-bottom: 15px;
-    }
-    /* 修正点5: アバター表示削除 */
-    /* #avatarDisplay スタイル削除 */
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ねこバトルチャレンジ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            text-align: center;
+            background-color: #fdf6e3; /* 基本の背景色 */
+            margin: 0;
+            padding: 15px; /* 少し減らす */
+            transition: background-color 0.15s ease-out;
+        }
+        h1 {
+            font-size: 1.8em; /* 少し調整 */
+            color: #d35400;
+            margin-bottom: 10px; /* 調整 */
+        }
 
-    #enemyStatus, #playerStatus {
-      font-size: 1.1em;
-      margin: 10px 0;
-      color: #555;
-      background-color: rgba(255, 255, 255, 0.7); /* 半透明背景で見やすく */
-      padding: 5px 10px;
-      border-radius: 8px;
-      display: inline-block; /* 幅を内容に合わせる */
-    }
-    #question {
-      font-size: 2.5em;
-      margin: 25px 0; /* マージン調整 */
-      color: #2c3e50; /* 濃い青灰色 */
-      font-weight: 700;
-      min-height: 1.3em; /* 少し調整 */
-    }
-    #answerChoices {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 15px; /* マージン調整 */
-      margin-bottom: 15px; /* マージン調整 */
-    }
-    .choice-btn {
-      font-family: 'M PLUS Rounded 1c', sans-serif; /* フォント適用 */
-      font-size: 1.5em;
-      padding: 12px 22px; /* 少し大きく */
-      border-radius: 10px;
-      border: 2px solid #f39c12; /* オレンジ系 */
-      background-color: #fff;
-      color: #333;
-      cursor: pointer;
-      min-width: 85px; /* 少し調整 */
-      transition: background-color 0.2s, transform 0.1s;
-    }
-    .choice-btn:hover:not(:disabled) { /* disabledでない時だけhover */
-      background-color: #fef9e7; /* 薄い黄色 */
-    }
-    .choice-btn:active:not(:disabled) { /* disabledでない時だけactive */
-        transform: scale(0.96);
-    }
-    /* 修正点3: 回答ボタン無効化時のスタイル */
-    .choice-btn:disabled {
-        background-color: #eee;
-        border-color: #ccc;
-        color: #aaa;
-        cursor: not-allowed;
-    }
+        /* --- バトル画面レイアウト --- */
+        #battleScreen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px; /* 要素間のスペース */
+        }
 
-    #battleLog {
-      font-size: 1.2em;
-      min-height: 2em;
-      margin: 15px 0; /* マージン調整 */
-      color: #c0392b; /* 赤系 */
-      font-weight: bold;
-    }
+        /* --- 敵・プレイヤー表示エリア --- */
+        .character-area {
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px 0;
+            width: 90%;
+            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        #enemyArea { border-color: #e74c3c; } /* 敵は赤系 */
+        #playerArea { border-color: #3498db; } /* プレイヤーは青系 */
 
-    #startBtn { /* 名前変更: gameCtrlBtn (汎用的な名前に) */
-      font-family: 'M PLUS Rounded 1c', sans-serif; /* フォント適用 */
-      font-size: 1.2em;
-      padding: 12px 35px; /* 少し大きく */
-      margin: 10px;
-      border-radius: 20px;
-      border: none;
-      background-color: #e67e22; /* オレンジ系 */
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      min-width: 150px; /* 少し大きく */
-      transition: background-color 0.2s, transform 0.1s;
-    }
-    #startBtn:hover { /* gameCtrlBtn */
-      background-color: #d35400; /* 濃いオレンジ */
-    }
-     #startBtn:active { /* gameCtrlBtn */
-        transform: scale(0.97);
-    }
+        .character-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .character-name { font-size: 1.1em; }
+        .character-hp-text { font-size: 1em; }
 
-    /* 修正点3: フィードバック用背景色クラス */
-    body.feedback-correct { background-color: #dff0d8; } /* 薄い緑 */
-    body.feedback-wrong { background-color: #f2dede; } /* 薄い赤 */
-    body.feedback-damage-player { background-color: #f2dede; } /* 薄い赤 */
-    body.feedback-damage-enemy { background-color: #dff0d8; } /* 薄い緑 */
+        /* --- HPバー --- */
+        .hp-bar-container {
+            height: 15px; /* バーの高さ */
+            background-color: #eee;
+            border-radius: 8px;
+            overflow: hidden; /* 中身がはみ出ないように */
+            border: 1px solid #ddd;
+        }
+        .hp-bar {
+            height: 100%;
+            background-color: #4caf50; /* 緑色 */
+            width: 100%; /* 初期値 */
+            border-radius: 6px;
+            transition: width 0.3s ease-in-out; /* 幅変化のアニメーション */
+        }
+        #enemyArea .hp-bar { background-color: #f44336; } /* 敵は赤 */
+        #playerArea .hp-bar { background-color: #4caf50; } /* プレイヤーは緑 */
 
+        /* --- キャラクター表示 (絵文字) --- */
+        .character-display {
+            font-size: 3em; /* 絵文字サイズ */
+            margin: 5px 0;
+            /* ダメージ時アニメーション用 */
+            transition: transform 0.1s ease-in-out;
+        }
 
-    @media (max-width: 768px) {
-      h1 { font-size: 1.8em; }
-      #question { font-size: 2em; margin: 20px 0; }
-      #battleLog { font-size: 1.1em; }
-      #startBtn { font-size: 1em; padding: 10px 25px; min-width: 120px; } /* gameCtrlBtn */
-      .choice-btn { font-size: 1.2em; padding: 10px 18px; min-width: 70px; }
-    }
-  </style>
+        /* --- 問題・回答エリア --- */
+        #question {
+            font-size: 2.2em; /* 調整 */
+            margin: 15px 0; /* 調整 */
+            color: #2c3e50;
+            font-weight: 700;
+            min-height: 1.3em;
+        }
+        #answerChoices {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px; /* 調整 */
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .choice-btn {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            font-size: 1.3em; /* 調整 */
+            padding: 10px 18px; /* 調整 */
+            border-radius: 8px; /* 調整 */
+            border: 2px solid #f39c12;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+            min-width: 70px; /* 調整 */
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .choice-btn:hover:not(:disabled) { background-color: #fef9e7; }
+        .choice-btn:active:not(:disabled) { transform: scale(0.96); }
+        .choice-btn:disabled { background-color: #eee; border-color: #ccc; color: #aaa; cursor: not-allowed; }
+
+        #battleLog {
+            font-size: 1.1em; /* 調整 */
+            min-height: 1.5em; /* 調整 */
+            margin: 10px 0;
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+        #startBtn { /* または gameCtrlBtn */
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            font-size: 1.1em; /* 調整 */
+            padding: 10px 30px; /* 調整 */
+            margin: 15px 0 5px 0; /* 上マージン追加 */
+            border-radius: 20px;
+            border: none;
+            background-color: #e67e22;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            min-width: 160px; /* 調整 */
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        #startBtn:hover { background-color: #d35400; }
+        #startBtn:active { transform: scale(0.97); }
+
+        /* --- アニメーション --- */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            50% { transform: translateX(3px); }
+            75% { transform: translateX(-3px); }
+        }
+        .shake-animation {
+            animation: shake 0.2s ease-in-out;
+        }
+
+        /* フィードバック用背景色クラス (変更なし) */
+        body.feedback-correct { background-color: #dff0d8; }
+        body.feedback-wrong { background-color: #f2dede; }
+        body.feedback-damage-player { background-color: #f2dede; }
+        body.feedback-damage-enemy { background-color: #dff0d8; }
+
+        /* レスポンシブ (簡易) */
+        @media (max-width: 600px) {
+            h1 { font-size: 1.6em; }
+            .character-display { font-size: 2.5em; }
+            #question { font-size: 1.8em; }
+            .choice-btn { font-size: 1.1em; padding: 8px 15px; min-width: 60px; }
+            #startBtn { font-size: 1em; padding: 10px 25px; min-width: 140px; }
+            #battleLog { font-size: 1em; }
+        }
+    </style>
 </head>
 <body>
-  <h1>ねこバトルチャレンジ</h1>
-  <div id="enemyStatus">🐶 ??? (Lv <span id="enemyLevel">1</span>) - HP: <span id="enemyHP">10</span></div>
-  <div id="playerStatus">😺 にゃんたろう - HP: <span id="playerHP">10</span></div>
-  <div id="question">問題表示</div>
-  <div id="answerChoices"></div>
-  <div id="battleLog">戦闘ログ</div>
-  <button id="startBtn">スタート</button>
+    <h1>ねこバトルチャレンジ</h1>
+
+    <div id="battleScreen">
+        <div id="enemyArea" class="character-area">
+            <div class="character-info">
+                <span class="character-name" id="enemyName">🐶 いぬLv1</span>
+                <span class="character-hp-text">HP: <span id="enemyHPText">10</span></span>
+            </div>
+            <div class="hp-bar-container">
+                <div class="hp-bar" id="enemyHPBar"></div>
+            </div>
+            <div class="character-display" id="enemyCharacter">🐶</div>
+        </div>
+
+        <div id="questionArea">
+            <div id="question">問題表示</div>
+            <div id="answerChoices"></div>
+        </div>
+
+        <div id="playerArea" class="character-area">
+             <div class="character-display" id="playerCharacter">😺</div>
+            <div class="hp-bar-container">
+                <div class="hp-bar" id="playerHPBar"></div>
+            </div>
+            <div class="character-info">
+                <span class="character-name">にゃんたろう</span>
+                <span class="character-hp-text">HP: <span id="playerHPText">10</span></span>
+            </div>
+        </div>
+
+        <div id="infoArea">
+            <div id="battleLog">戦闘ログ</div>
+            <button id="startBtn">スタート</button>
+        </div>
+    </div>
 
   <script>
-    const totalQuestions = 10; // 1ステージあたりの問題数
-    let problems = [];
-    let index = 0;
-    let startTime;
-    let playerHP = 10;
-    let enemyHP = 10;
-    let currentStage = 1;
-    let battleInProgress = false; // 修正点3: 回答後の待ち時間制御用
+    const totalQuestionsPerStage = 10; // ステージごとの問題数
+    let currentStage = 1; // 現在のステージレベル
+    let playerMaxHP = 10; // プレイヤーの最大HP
+    let playerHP = playerMaxHP;
+    let currentEnemy = {}; // 現在の敵情報
+    let enemyMaxHP = 10; // 敵の最大HP（HPバー計算用）
+    let enemyHP = enemyMaxHP;
+    let problems = []; // 現在のステージの問題
+    let currentProblemIndex = 0; // 現在の問題インデックス
+    let questionStartTime; // 問題表示時刻
+    let battleInProgress = false; // 回答処理中フラグ
+    let comboCount = 0; // 連続正解数
 
     // DOM要素取得
-    const startBtn = document.getElementById("startBtn"); // 名前はこのまま or gameCtrlBtn
+    const startBtn = document.getElementById("startBtn");
     const questionDiv = document.getElementById("question");
-    const battleLog = document.getElementById("battleLog");
-    const enemyHPDisplay = document.getElementById("enemyHP");
-    const enemyLevelDisplay = document.getElementById("enemyLevel");
-    const playerHPDisplay = document.getElementById("playerHP");
-    // 修正点5: avatarDisplay 削除
-    const enemyStatus = document.getElementById("enemyStatus");
     const answerChoicesDiv = document.getElementById("answerChoices");
+    const battleLog = document.getElementById("battleLog");
+    // 敵関連
+    const enemyArea = document.getElementById("enemyArea");
+    const enemyName = document.getElementById("enemyName");
+    const enemyHPText = document.getElementById("enemyHPText");
+    const enemyHPBar = document.getElementById("enemyHPBar");
+    const enemyCharacter = document.getElementById("enemyCharacter");
+    // プレイヤー関連
+    const playerArea = document.getElementById("playerArea");
+    const playerHPText = document.getElementById("playerHPText");
+    const playerHPBar = document.getElementById("playerHPBar");
+    const playerCharacter = document.getElementById("playerCharacter"); // プレイヤーキャラ表示用
 
-    // 修正点5: equipped 変数削除
+    // --- 敵データ定義 ---
+    const enemies = {
+        // Lv1-4: いぬ
+        1: { name: "いぬ", emoji: "🐶", hp: 12, type: "normal" },
+        2: { name: "いぬ", emoji: "🐶", hp: 15, type: "normal" },
+        3: { name: "いぬ", emoji: "🐶", hp: 18, type: "normal" },
+        4: { name: "いぬ", emoji: "🐶", hp: 22, type: "normal" },
+        // Lv5: ボスオオカミ
+        5: { name: "ボスオオカミ", emoji: "🐺", hp: 35, type: "boss" },
+        // Lv6-9: くま
+        6: { name: "くま", emoji: "🐻", hp: 30, type: "normal" },
+        7: { name: "くま", emoji: "🐻", hp: 35, type: "normal" },
+        8: { name: "くま", emoji: "🐻", hp: 40, type: "normal" },
+        9: { name: "くま", emoji: "🐻", hp: 45, type: "normal" },
+        // Lv10: ボスゴリラ
+        10: { name: "ボスゴリラ", emoji: "🦍", hp: 60, type: "boss" },
+         // Lv11-14: スライム (例)
+        11: { name: "スライム", emoji: "💧", hp: 50, type: "normal" },
+        12: { name: "スライム", emoji: "💧", hp: 55, type: "normal" },
+        13: { name: "スライム", emoji: "💧", hp: 60, type: "normal" },
+        14: { name: "スライム", emoji: "💧", hp: 65, type: "normal" },
+        // Lv15: ボスキングスライム
+        15: { name: "ボスキングスライム", emoji: "👑💧", hp: 90, type: "boss" },
+        // Lv16~ はさらに追加可能
+    };
+    const maxStage = Object.keys(enemies).length; // 最大ステージ数
 
-    // 敵リスト
-    const enemyList = Array.from({ length: 30 }, (_, i) => {
-      const level = i + 1;
-      return {
-        name: `いぬLv${level}`, emoji: "🐶", level,
-        hp: 10 + Math.floor(level * 1.5)
-      };
-    });
+    // --- 問題生成関数 (難易度上昇対応) ---
+    function generateProblems(stage) {
+        const generatedProblems = [];
+        const count = totalQuestionsPerStage; // ステージごとの問題数
 
-    // 修正点5: updateAvatar 関数削除
+        // 難易度に応じた問題生成ロジック
+        let num1, num2, answer, questionText, type;
 
-    function generateProblems() {
-      problems = [];
-      // 問題の種類や難易度はここで調整可能
-      for (let a = 2; a < 10; a++) {
-        for (let b = 2; b < 10; b++) {
-          problems.push({ q: `${a} × ${b}`, a: a * b });
+        for (let i = 0; i < count; i++) {
+            if (stage <= 3) { // Lv1-3: 簡単な足し算 (繰り上がりなし)
+                type = '+';
+                do {
+                    num1 = Math.floor(Math.random() * 9) + 1; // 1-9
+                    num2 = Math.floor(Math.random() * (10 - num1)); // 例: num1=3ならnum2=0-6
+                } while (num1 + num2 >= 10); // 繰り上がりなしを保証 (num2の範囲でほぼ保証)
+                answer = num1 + num2;
+            } else if (stage <= 6) { // Lv4-6: 足し算 (繰り上がりあり)
+                type = '+';
+                num1 = Math.floor(Math.random() * 9) + 1; // 1-9
+                num2 = Math.floor(Math.random() * 9) + 1; // 1-9
+                answer = num1 + num2;
+            } else if (stage <= 10) { // Lv7-10: 引き算 (答え >= 0)
+                type = '-';
+                num1 = Math.floor(Math.random() * 9) + 1; // 1-9
+                num2 = Math.floor(Math.random() * num1) + 1; // num1以下の数 (1~)
+                answer = num1 - num2;
+            } else if (stage <= 15) { // Lv11-15: 掛け算 (1桁 x 1桁)
+                type = '×';
+                num1 = Math.floor(Math.random() * 8) + 2; // 2-9
+                num2 = Math.floor(Math.random() * 8) + 2; // 2-9
+                answer = num1 * num2;
+            } else { // Lv16以上: 2桁 + 1桁 (例) - ここからさらに複雑化
+                type = '+';
+                num1 = Math.floor(Math.random() * 90) + 10; // 10-99
+                num2 = Math.floor(Math.random() * 9) + 1;   // 1-9
+                answer = num1 + num2;
+                // さらに割り算や虫食い算などを追加
+            }
+            questionText = `${num1} ${type} ${num2}`;
+            generatedProblems.push({ q: questionText, a: answer });
         }
-      }
-      // --- 修正点1: Fisher-Yatesシャッフル ---
-      for (let i = problems.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [problems[i], problems[j]] = [problems[j], problems[i]];
-      }
-      // --- 修正点1 ここまで ---
-      problems = problems.slice(0, totalQuestions);
+
+        // Fisher-Yatesシャッフル
+        for (let i = generatedProblems.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [generatedProblems[i], generatedProblems[j]] = [generatedProblems[j], generatedProblems[i]];
+        }
+        return generatedProblems;
     }
 
+    // 選択肢生成関数 (変更なし)
     function generateChoices(correct) {
-      const choices = new Set();
-      choices.add(correct);
-      // 誤答生成ロジック (現状維持)
-      let attempts = 0; // 無限ループ防止用
+      const choices = new Set(); choices.add(correct);
+      let attempts = 0;
       while (choices.size < 6 && attempts < 50) {
-        const delta = Math.floor(Math.random() * 10) - 5; // 正解±5の範囲
+        const delta = Math.floor(Math.random() * 10) - 5 + (Math.random() < 0.5 ? 10 : -10); // 誤答の幅を少し広げる
         const choice = correct + delta;
-        // 正解と同じでなく、0より大きく、まだセットにない値を追加
-        if (choice !== correct && choice > 0 && !choices.has(choice)) {
-           choices.add(choice);
-        }
+        if (choice !== correct && choice >= 0 && !choices.has(choice)) { choices.add(choice); } // 0以上を許可
         attempts++;
       }
-      // もし6個生成できなかった場合（レアケース）、適当な値で埋める
-      while (choices.size < 6) {
-        choices.add(Math.max(1, correct + choices.size)); // 適当な値
-      }
-
+      while (choices.size < 6) { choices.add(Math.max(0, correct + choices.size + Math.floor(Math.random()*3))); } // 0以上を保証
       const choiceArray = Array.from(choices);
-      choiceArray.sort(() => Math.random() - 0.5); // 選択肢の位置をシャッフル
+      choiceArray.sort(() => Math.random() - 0.5);
       return choiceArray;
     }
 
+    // HPバー更新関数
+    function updateHPBar(elementId, currentHP, maxHP) {
+        const bar = document.getElementById(elementId);
+        const percentage = Math.max(0, (currentHP / maxHP) * 100);
+        bar.style.width = `${percentage}%`;
+    }
+
+    // キャラクター揺れアニメーション関数
+    function shakeCharacter(elementId) {
+        const characterElement = document.getElementById(elementId);
+        characterElement.classList.add('shake-animation');
+        setTimeout(() => {
+            characterElement.classList.remove('shake-animation');
+        }, 200); // アニメーション時間(0.2s)後にクラス削除
+    }
+
+
     function showQuestion() {
-        // 待機状態を解除
         battleInProgress = false;
 
-        if (index >= problems.length || playerHP <= 0 || enemyHP <= 0) {
+        if (currentProblemIndex >= problems.length || playerHP <= 0 || enemyHP <= 0) {
             endBattle();
             return;
         }
-        const p = problems[index];
+        const p = problems[currentProblemIndex];
         questionDiv.textContent = p.q;
-        startTime = Date.now();
-        battleLog.textContent = "計算して回答ボタンを押してね！"; // メッセージ変更
+        questionStartTime = Date.now();
+        battleLog.textContent = `Lv${currentStage} (${currentProblemIndex + 1}/${totalQuestionsPerStage}) 問題！`;
 
         const choices = generateChoices(p.a);
-        answerChoicesDiv.innerHTML = ""; // 前のボタンをクリア
+        answerChoicesDiv.innerHTML = "";
         choices.forEach(choice => {
             const btn = document.createElement("button");
             btn.textContent = choice;
             btn.className = "choice-btn";
-            btn.onclick = () => handleAnswer(choice); // onclickを使用
-            // disabled = false はデフォルトなので設定不要
+            btn.onclick = () => handleAnswer(choice);
             answerChoicesDiv.appendChild(btn);
         });
     }
 
     function handleAnswer(selectedAnswer) {
-        // 修正点3: 回答後の待ち時間制御
-        if (battleInProgress) return; // 処理中の連続クリックを無視
-        battleInProgress = true; // 処理開始
+        if (battleInProgress) return;
+        battleInProgress = true;
 
-        // 回答ボタンを無効化
         const choiceButtons = answerChoicesDiv.querySelectorAll('.choice-btn');
         choiceButtons.forEach(btn => btn.disabled = true);
 
-        const elapsed = (Date.now() - startTime) / 1000;
-        const p = problems[index];
-        let feedbackClass = ''; // 修正点3: フィードバック用クラス
+        const elapsed = (Date.now() - questionStartTime) / 1000;
+        const p = problems[currentProblemIndex];
+        let feedbackClass = '';
+        let damageToEnemy = 0;
+        let damageToPlayer = 0;
+        let logMessage = "";
 
         if (selectedAnswer === p.a) {
-            // 正解時の処理
-            if (elapsed < 1.2) {
-                enemyHP -= 5;
-                battleLog.textContent = `Perfect! (${elapsed.toFixed(1)}秒) 敵に5ダメージ!`;
-                feedbackClass = 'feedback-damage-enemy';
-            } else if (elapsed < 2.0) {
-                enemyHP -= 3;
-                battleLog.textContent = `Great! (${elapsed.toFixed(1)}秒) 敵に3ダメージ!`;
-                feedbackClass = 'feedback-damage-enemy';
-            } else if (elapsed < 3.0) {
-                enemyHP -= 1;
-                battleLog.textContent = `Good! (${elapsed.toFixed(1)}秒) 敵に1ダメージ`;
-                feedbackClass = 'feedback-damage-enemy';
+            // 正解
+            comboCount++; // コンボカウントアップ
+            let baseDamage = 0;
+            const criticalTime = 0.8; // クリティカルヒット判定時間 (0.8秒)
+            const perfectTime = 1.5; // パーフェクト判定時間
+            const greatTime = 2.5;   // グレート判定時間
+            const goodTime = 4.0;    // グッド判定時間
+
+            if (elapsed < criticalTime) {
+                baseDamage = 6; // クリティカルヒットダメージ
+                logMessage = `✨Critical Hit!✨ (${elapsed.toFixed(1)}秒) `;
+                feedbackClass = 'feedback-correct'; // 正解フィードバックを優先
+            } else if (elapsed < perfectTime) {
+                baseDamage = 4;
+                logMessage = `Perfect! (${elapsed.toFixed(1)}秒) `;
+                feedbackClass = 'feedback-correct';
+            } else if (elapsed < greatTime) {
+                baseDamage = 2;
+                logMessage = `Great! (${elapsed.toFixed(1)}秒) `;
+                feedbackClass = 'feedback-correct';
+            } else if (elapsed < goodTime) {
+                baseDamage = 1;
+                logMessage = `Good (${elapsed.toFixed(1)}秒) `;
+                feedbackClass = 'feedback-correct';
             } else {
-                playerHP -= 2;
-                battleLog.textContent = `Too slow... (${elapsed.toFixed(1)}秒) ミス! 自分に2ダメージ!`;
+                // 時間がかかりすぎたペナルティ
+                damageToPlayer = 2;
+                logMessage = `Too slow... (${elapsed.toFixed(1)}秒) 自分に${damageToPlayer}ダメージ!`;
                 feedbackClass = 'feedback-damage-player';
+                comboCount = 0; // コンボリセット
             }
+
+            // コンボボーナス（例: 3コンボ以上でダメージ+1、5コンボ以上で+2）
+            let comboBonus = 0;
+            if (comboCount >= 5) {
+                comboBonus = 2;
+            } else if (comboCount >= 3) {
+                comboBonus = 1;
+            }
+            damageToEnemy = baseDamage + comboBonus;
+
+            if(damageToEnemy > 0) {
+                 logMessage += `敵に${damageToEnemy}ダメージ!`;
+                 if (comboCount >= 3) logMessage += ` (${comboCount} Combo!)`;
+                 feedbackClass = 'feedback-damage-enemy'; // ダメージフィードバック
+                 shakeCharacter('enemyCharacter'); // 敵を揺らす
+            } else if (damageToPlayer > 0) {
+                shakeCharacter('playerCharacter'); // プレイヤーを揺らす
+            }
+
         } else {
-            // 不正解時の処理
-            playerHP -= 3;
-            battleLog.textContent = `Wrong! (${elapsed.toFixed(1)}秒) 自分に3ダメージ!`;
+            // 不正解
+            damageToPlayer = 3; // 不正解時のダメージ
+            logMessage = `Wrong! 自分に${damageToPlayer}ダメージ!`;
             feedbackClass = 'feedback-wrong';
+            comboCount = 0; // コンボリセット
+            shakeCharacter('playerCharacter'); // プレイヤーを揺らす
         }
 
-        // 修正点3: 視覚フィードバック適用
+        // HP反映
+        enemyHP -= damageToEnemy;
+        playerHP -= damageToPlayer;
+
+        // HP表示更新
+        enemyHPText.textContent = Math.max(0, enemyHP);
+        playerHPText.textContent = Math.max(0, playerHP);
+        updateHPBar('enemyHPBar', enemyHP, enemyMaxHP);
+        updateHPBar('playerHPBar', playerHP, playerMaxHP);
+
+        // ログ表示
+        battleLog.textContent = logMessage;
+
+        // 視覚フィードバック
         if (feedbackClass) {
             document.body.classList.add(feedbackClass);
             setTimeout(() => {
                 document.body.classList.remove(feedbackClass);
-            }, 300); // 0.3秒後に背景色を戻す
+            }, 300);
         }
 
-        // HP表示更新
-        enemyHPDisplay.textContent = Math.max(0, enemyHP);
-        playerHPDisplay.textContent = Math.max(0, playerHP);
+        currentProblemIndex++;
 
-        index++;
-
-        // 修正点3: 少し待ってから次の問題へ
+        // 少し待ってから次の問題へ
         setTimeout(() => {
-            showQuestion(); // 0.75秒後に次の問題を表示
-        }, 750);
+            // HPチェックして戦闘終了判定もここで行う
+            if (playerHP <= 0 || enemyHP <= 0 || currentProblemIndex >= problems.length) {
+                 endBattle();
+            } else {
+                 showQuestion();
+            }
+        }, 1000); // 待ち時間を1秒に変更
     }
 
     function startBattle() {
-      const enemy = enemyList[currentStage - 1];
-      enemyHP = enemy.hp;
-      playerHP = 10; // プレイヤーHPリセット
-      index = 0;
-      generateProblems();
-      // 修正点5: updateAvatar() 呼び出し削除
-      enemyHPDisplay.textContent = enemy.hp;
-      enemyLevelDisplay.textContent = enemy.level;
-      // enemyStatus の内容を更新
-      enemyStatus.innerHTML = `${enemy.emoji} ${enemy.name} (Lv <span id="enemyLevel">${enemy.level}</span>) - HP: <span id="enemyHP">${enemy.hp}</span>`;
-      playerHPDisplay.textContent = playerHP; // プレイヤーHP表示も更新
-      startBtn.style.display = "none"; // スタートボタンを隠す
-      battleLog.textContent = ""; // バトルログ初期化
-      battleInProgress = false; // 状態リセット
-      showQuestion(); // 最初の問題表示
+        currentEnemy = enemies[currentStage] || enemies[maxStage]; // 現在ステージの敵 or 最大ステージの敵
+        enemyMaxHP = currentEnemy.hp;
+        enemyHP = enemyMaxHP;
+        playerHP = playerMaxHP; // プレイヤーHPリセット
+        currentProblemIndex = 0;
+        comboCount = 0; // コンボリセット
+        problems = generateProblems(currentStage); // ステージレベルに応じた問題を生成
+
+        // UI更新
+        enemyName.textContent = `${currentEnemy.emoji} ${currentEnemy.name} (Lv${currentStage})`;
+        enemyHPText.textContent = enemyHP;
+        playerHPText.textContent = playerHP;
+        updateHPBar('enemyHPBar', enemyHP, enemyMaxHP);
+        updateHPBar('playerHPBar', playerHP, playerMaxHP);
+        enemyCharacter.textContent = currentEnemy.emoji; // 敵キャラ表示更新
+
+        startBtn.style.display = "none";
+        battleLog.textContent = `Lv${currentStage} ${currentEnemy.name} があらわれた！`;
+        battleInProgress = false;
+
+        // 少し待ってから最初の問題表示（登場演出）
+        setTimeout(() => {
+             showQuestion();
+        }, 1000); // 1秒待つ
     }
 
     function endBattle() {
-        battleInProgress = true; // ボタン連打防止
-        answerChoicesDiv.innerHTML = ""; // 選択肢クリア
-        questionDiv.textContent = "Battle End!"; // 問題表示クリア
+        battleInProgress = true;
+        answerChoicesDiv.innerHTML = "";
+        questionDiv.textContent = "Battle End!";
 
         let resultMessage = "";
         let nextButtonText = "";
 
         if (enemyHP <= 0) {
-            // 勝利
-            resultMessage = `勝利！ ${enemyList[currentStage - 1].name} をたおした！`;
+            resultMessage = `勝利！ ${currentEnemy.name} をたおした！`;
             currentStage++;
-            if (currentStage > enemyList.length) {
+            if (currentStage > maxStage) {
                 resultMessage += " 全ステージクリア！おめでとう！";
-                startBtn.style.display = "none"; // 全クリならボタン非表示
+                startBtn.style.display = "none";
             } else {
                 nextButtonText = `次の敵 (Lv${currentStage}) と戦う！`;
                 startBtn.style.display = "inline-block";
             }
-        } else if (playerHP <= 0) {
-            // 敗北
-            resultMessage = "敗北...また挑戦してね！";
-            nextButtonText = "再挑戦！";
-            // currentStageはそのまま or 1に戻すかはゲームデザイン次第
-            startBtn.style.display = "inline-block";
-        } else {
-            // 問題切れ (10問終了) - HPが残っている場合
-            // このケースの扱いをどうするか (引き分け？ 敗北？)
-            // ここでは敗北扱いとして再挑戦を促す例
-            resultStage = "問題切れ...もう一度挑戦！";
-            nextButtonText = "再挑戦！";
-            startBtn.style.display = "inline-block";
+            // 勝利時にもフィードバック
+             document.body.classList.add('feedback-correct');
+             setTimeout(() => document.body.classList.remove('feedback-correct'), 500);
+        } else { // プレイヤーHP <= 0 または 問題切れ
+             resultMessage = playerHP <= 0 ? "敗北...また挑戦してね！" : "時間切れ...もう一度挑戦！";
+             nextButtonText = "再挑戦！";
+             // 敗北時は最初のステージからにするか、同じステージからにするか
+             // currentStage = 1; // 最初からにする場合
+             startBtn.style.display = "inline-block";
+             // 敗北時フィードバック
+             document.body.classList.add('feedback-wrong');
+             setTimeout(() => document.body.classList.remove('feedback-wrong'), 500);
         }
 
         battleLog.textContent = resultMessage;
@@ -345,19 +539,12 @@
         }
     }
 
-    startBtn.addEventListener("click", () => {
-        // サウンドは今回なし
-        startBattle();
-    });
+    startBtn.addEventListener("click", startBattle);
 
-    // 初期表示
-    playerHPDisplay.textContent = playerHP;
-    // 修正点5: updateAvatar() 呼び出し削除
-    // ページロード時に敵情報を表示する必要はないのでコメントアウト
-    // const initialEnemy = enemyList[currentStage - 1];
-    // enemyHPDisplay.textContent = initialEnemy.hp;
-    // enemyLevelDisplay.textContent = initialEnemy.level;
-    // enemyStatus.innerHTML = `${initialEnemy.emoji} ${initialEnemy.name} (Lv ${initialEnemy.level}) - HP: <span id="enemyHP">${initialEnemy.hp}</span>`;
+    // 初期表示設定
+    playerHPText.textContent = playerHP;
+    updateHPBar('playerHPBar', playerHP, playerMaxHP);
+    // 最初は敵情報なし or Lv1情報を表示しておくか -> startBattleで設定するので不要
 
   </script>
 </body>
