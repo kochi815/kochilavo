@@ -12,13 +12,7 @@
         body { font-family: 'M PLUS Rounded 1c', sans-serif; text-align: center; background-color: #fdf6e3; margin: 0; padding: 15px; transition: background-color 0.3s ease-out; position: relative; min-height: 100vh; box-sizing: border-box; }
         body.boss-battle-bg { background-color: #ffebee; }
         h1 { font-size: 1.8em; color: #d35400; margin-bottom: 10px; }
-        button { /* ボタン共通スタイル少し調整 */
-            font-family: 'M PLUS Rounded 1c', sans-serif;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            border: none;
-        }
+        button { font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: bold; cursor: pointer; transition: background-color 0.2s, transform 0.1s; border: none; }
         button:active:not(:disabled) { transform: scale(0.97); }
         button:disabled { cursor: not-allowed; opacity: 0.6; }
 
@@ -35,29 +29,22 @@
         #grade1ModeBtn { background-color: #87cefa; } #grade4ModeBtn { background-color: #ffcc80; }
         #grade1ModeBtn:hover { background-color: #5abcd8; } #grade4ModeBtn:hover { background-color: #ffa726; }
 
-        /* --- ★追加: スタート方法選択画面 --- */
-        #startMethodScreen {
-            padding-top: 50px;
-            display: none; /* 初期非表示 */
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
+        /* --- スタート方法選択画面 --- */
+        #startMethodScreen { padding-top: 50px; display: none; flex-direction: column; align-items: center; gap: 15px; }
         #startMethodScreen h2 { font-size: 1.5em; color: #555; }
-        .start-method-btn { /* はじめから/つづきから ボタン */
-             font-size: 1.4em; padding: 15px 40px; border-radius: 25px; color: white; min-width: 250px;
-        }
-        #startFromBeginningBtn { background-color: #a5d6a7; } /* 緑系 */
-        #continueFromLastBtn { background-color: #90caf9; } /* 青系 */
+        .start-method-btn { font-size: 1.4em; padding: 15px 40px; border-radius: 25px; color: white; min-width: 250px; }
+        #startFromBeginningBtn { background-color: #a5d6a7; }
+        #continueFromLastBtn { background-color: #90caf9; }
         #startFromBeginningBtn:hover { background-color: #81c784; }
         #continueFromLastBtn:hover:not(:disabled) { background-color: #64b5f6; }
 
         /* --- バトル画面 --- */
         #battleScreen { display: none; flex-direction: column; align-items: center; gap: 10px; }
-        /* ... バトル画面内の細かいスタイルは省略（前回同様） ... */
-        .character-area { border: 2px solid #eee; border-radius: 10px; padding: 10px; margin: 5px 0; width: 90%; max-width: 400px; background-color: rgba(255, 255, 255, 0.8); box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative; } #enemyArea { border-color: #e74c3c; } #playerArea { border-color: #3498db; } .character-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-weight: bold; } .character-name { font-size: 1.1em; } .character-hp-text { font-size: 1em; } .hp-bar-container { height: 15px; background-color: #eee; border-radius: 8px; overflow: hidden; border: 1px solid #ddd; } .hp-bar { height: 100%; width: 100%; border-radius: 6px; transition: width 0.3s ease-in-out; } #enemyArea .hp-bar { background-color: #f44336; } #playerArea .hp-bar { background-color: #4caf50; } .character-display { font-size: 3em; margin: 5px 0; transition: transform 0.1s ease-in-out, opacity 0.3s ease-out; opacity: 1; } .character-display.defeated { opacity: 0; transform: scale(0.5) rotate(30deg); } #question { font-size: 2.2em; margin: 15px 0; color: #2c3e50; font-weight: 700; min-height: 1.3em; } #answerChoices { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; margin-bottom: 10px; } .choice-btn { font-size: 1.3em; padding: 10px 18px; border-radius: 8px; border: 2px solid #f39c12; background-color: #fff; color: #333; min-width: 70px; } .choice-btn:hover:not(:disabled) { background-color: #fef9e7; } .choice-btn:disabled { background-color: #eee; border-color: #ccc; color: #aaa; } #battleLog { font-size: 1.1em; min-height: 1.5em; margin: 10px 0; color: #c0392b; font-weight: bold; } #startBtn { font-size: 1.1em; padding: 10px 30px; margin: 15px 0 5px 0; border-radius: 20px; background-color: #e67e22; color: white; min-width: 160px; } #startBtn:hover { background-color: #d35400; } #feedbackDisplay { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%) scale(0.8); font-size: 3em; font-weight: bold; color: #fff; background-color: rgba(0, 0, 0, 0.6); padding: 10px 25px; border-radius: 15px; opacity: 0; transition: opacity 0.2s ease-out, transform 0.2s ease-out; pointer-events: none; z-index: 10; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); } #feedbackDisplay.show { opacity: 1; transform: translate(-50%, -50%) scale(1); } #feedbackDisplay.critical { color: #ffeb3b; } #feedbackDisplay.perfect { color: #81d4fa; } #feedbackDisplay.great { color: #a5d6a7; } #feedbackDisplay.good { color: #fff; } #feedbackDisplay.slow { color: #ef9a9a; } #feedbackDisplay.wrong { color: #f44336; background-color: rgba(255, 255, 255, 0.8); text-shadow: none;} #comboDisplay { position: absolute; top: 60%; left: 50%; transform: translateX(-50%); font-size: 2.5em; font-weight: bold; color: #ff9800; opacity: 0; transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 5; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); } #comboDisplay.show { opacity: 1; animation: comboBounce 0.3s ease-out; } #comboDisplay.great-combo { color: #f44336; } #comboDisplay.amazing-combo { color: #9c27b0; }
+        .character-area { border: 2px solid #eee; border-radius: 10px; padding: 10px; margin: 5px 0; width: 90%; max-width: 400px; background-color: rgba(255, 255, 255, 0.8); box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative; } #enemyArea { border-color: #e74c3c; } #playerArea { border-color: #3498db; } .character-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-weight: bold; } .character-name { font-size: 1.1em; } .character-hp-text { font-size: 1em; } .hp-bar-container { height: 15px; background-color: #eee; border-radius: 8px; overflow: hidden; border: 1px solid #ddd; } .hp-bar { height: 100%; width: 100%; border-radius: 6px; transition: width 0.3s ease-in-out; } #enemyArea .hp-bar { background-color: #f44336; } #playerArea .hp-bar { background-color: #4caf50; } .character-display { font-size: 3em; margin: 5px 0; transition: transform 0.1s ease-in-out, opacity 0.3s ease-out; opacity: 1; } .character-display.defeated { opacity: 0; transform: scale(0.5) rotate(30deg); } #question { font-size: 2.2em; margin: 15px 0; color: #2c3e50; font-weight: 700; min-height: 1.3em; } #answerChoices { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; margin-bottom: 10px; } .choice-btn { font-size: 1.3em; padding: 10px 18px; border-radius: 8px; border: 2px solid #f39c12; background-color: #fff; color: #333; min-width: 70px; } .choice-btn:hover:not(:disabled) { background-color: #fef9e7; } .choice-btn:disabled { background-color: #eee; border-color: #ccc; color: #aaa; } #battleLog { font-size: 1.1em; min-height: 1.5em; margin: 10px 0; color: #c0392b; font-weight: bold; } #startBtn { font-size: 1.1em; padding: 10px 30px; margin: 15px 0 5px 0; border-radius: 20px; background-color: #e67e22; color: white; min-width: 160px; } #startBtn:hover { background-color: #d35400; }
+        #feedbackDisplay { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%) scale(0.8); font-size: 3em; font-weight: bold; color: #fff; background-color: rgba(0, 0, 0, 0.6); padding: 10px 25px; border-radius: 15px; opacity: 0; transition: opacity 0.2s ease-out, transform 0.2s ease-out; pointer-events: none; z-index: 10; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); } #feedbackDisplay.show { opacity: 1; transform: translate(-50%, -50%) scale(1); } #feedbackDisplay.critical { color: #ffeb3b; } #feedbackDisplay.perfect { color: #81d4fa; } #feedbackDisplay.great { color: #a5d6a7; } #feedbackDisplay.good { color: #fff; } #feedbackDisplay.slow { color: #ef9a9a; } #feedbackDisplay.wrong { color: #f44336; background-color: rgba(255, 255, 255, 0.8); text-shadow: none;}
+        #comboDisplay { position: absolute; top: 60%; left: 50%; transform: translateX(-50%); font-size: 2.5em; font-weight: bold; color: #ff9800; opacity: 0; transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 5; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); } #comboDisplay.show { opacity: 1; animation: comboBounce 0.3s ease-out; } #comboDisplay.great-combo { color: #f44336; } #comboDisplay.amazing-combo { color: #9c27b0; }
         @keyframes comboBounce { 0% { transform: translateX(-50%) scale(0.8); } 50% { transform: translateX(-50%) scale(1.1); } 100% { transform: translateX(-50%) scale(1); } } @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px); } 50% { transform: translateX(3px); } 75% { transform: translateX(-3px); } } .shake-animation { animation: shake 0.2s ease-in-out; } body.feedback-flash { background-color: #fff3e0; }
-        @media (max-width: 600px) { /* ... 省略 ... */ h1 { font-size: 1.6em; } .character-display { font-size: 2.5em; } #question { font-size: 1.8em; } .choice-btn { font-size: 1.1em; padding: 8px 15px; min-width: 60px; } #startBtn { font-size: 1em; padding: 10px 25px; min-width: 140px; } #battleLog { font-size: 1em; } #feedbackDisplay { font-size: 2.5em; padding: 8px 20px;} #comboDisplay { font-size: 2em; top: 55%; } #bgmToggleBtn { font-size: 1.5em; top: 10px; right: 10px; } .mode-btn, .start-method-btn { font-size: 1.2em; padding: 12px 30px; min-width: 200px; } }
+        @media (max-width: 600px) { h1 { font-size: 1.6em; } .character-display { font-size: 2.5em; } #question { font-size: 1.8em; } .choice-btn { font-size: 1.1em; padding: 8px 15px; min-width: 60px; } #startBtn { font-size: 1em; padding: 10px 25px; min-width: 140px; } #battleLog { font-size: 1em; } #feedbackDisplay { font-size: 2.5em; padding: 8px 20px;} #comboDisplay { font-size: 2em; top: 55%; } #bgmToggleBtn { font-size: 1.5em; top: 10px; right: 10px; } .mode-btn, .start-method-btn { font-size: 1.2em; padding: 12px 30px; min-width: 200px; } }
     </style>
 </head>
 <body>
@@ -73,10 +60,11 @@
     <div id="startMethodScreen" style="display: none;">
         <h2>どうやってはじめる？</h2>
         <button id="startFromBeginningBtn" class="start-method-btn">はじめから (Lv 1)</button>
-        <button id="continueFromLastBtn" class="start-method-btn" style="display: none;">つづきから (Lv X)</button> </div>
+        <button id="continueFromLastBtn" class="start-method-btn" style="display: none;">つづきから (Lv X)</button>
+    </div>
 
     <div id="battleScreen">
-        <div id="enemyArea" class="character-area"> <div class="character-info"> <span class="character-name" id="enemyName"></span> <span class="character-hp-text">HP: <span id="enemyHPText"></span></span> </div> <div class="hp-bar-container"> <div class="hp-bar" id="enemyHPBar"></div> </div> <div class="character-display" id="enemyCharacter"></div> </div>
+         <div id="enemyArea" class="character-area"> <div class="character-info"> <span class="character-name" id="enemyName"></span> <span class="character-hp-text">HP: <span id="enemyHPText"></span></span> </div> <div class="hp-bar-container"> <div class="hp-bar" id="enemyHPBar"></div> </div> <div class="character-display" id="enemyCharacter"></div> </div>
          <div id="questionArea"> <div id="question"></div> <div id="answerChoices"></div> </div>
          <div id="playerArea" class="character-area"> <div class="character-display" id="playerCharacter">😺</div> <div class="hp-bar-container"> <div class="hp-bar" id="playerHPBar"></div> </div> <div class="character-info"> <span class="character-name">にゃんたろう</span> <span class="character-hp-text">HP: <span id="playerHPText"></span></span> </div> </div>
          <div id="infoArea"> <div id="battleLog"></div> <button id="startBtn"></button> </div>
@@ -90,180 +78,105 @@
     let currentEnemy = {}; let enemyMaxHP = 10; let enemyHP = enemyMaxHP;
     let problems = []; let currentProblemIndex = 0; let questionStartTime;
     let battleInProgress = false; let comboCount = 0; let isBgmEnabled = true;
-    let questionsForThisStage = 10;
-    let highestClearedStage = 0; // ★追加: モードごとの最高クリアステージ記録用 (読み込み時に設定)
-
-    // --- localStorage キー定義 ---
-    const BGM_KEY = 'nekobattle_bgmEnabled_v1';
-    const HIGHEST_STAGE_KEY_PREFIX = 'nekobattle_highestStage_'; // モード別キーの接頭辞
+    const BGM_KEY = 'nekobattle_bgmEnabled_v1'; let questionsForThisStage = 10;
+    const HIGHEST_STAGE_KEY_PREFIX = 'nekobattle_highestStage_';
+    let highestClearedStage = 0;
 
     // --- DOM要素取得 ---
-    const modeSelectScreen = document.getElementById("modeSelectScreen"); const grade1ModeBtn = document.getElementById("grade1ModeBtn"); const grade4ModeBtn = document.getElementById("grade4ModeBtn");
-    const startMethodScreen = document.getElementById("startMethodScreen"); // ★追加
-    const startFromBeginningBtn = document.getElementById("startFromBeginningBtn"); // ★追加
-    const continueFromLastBtn = document.getElementById("continueFromLastBtn"); // ★追加
-    const battleScreen = document.getElementById("battleScreen"); const startBtn = document.getElementById("startBtn");
-    // 他の要素取得 (変更なし)
-    const questionDiv = document.getElementById("question"); const answerChoicesDiv = document.getElementById("answerChoices"); const battleLog = document.getElementById("battleLog"); const enemyArea = document.getElementById("enemyArea"); const enemyName = document.getElementById("enemyName"); const enemyHPText = document.getElementById("enemyHPText"); const enemyHPBar = document.getElementById("enemyHPBar"); const enemyCharacter = document.getElementById("enemyCharacter"); const playerArea = document.getElementById("playerArea"); const playerHPText = document.getElementById("playerHPText"); const playerHPBar = document.getElementById("playerHPBar"); const playerCharacter = document.getElementById("playerCharacter"); const feedbackDisplay = document.getElementById("feedbackDisplay"); const comboDisplay = document.getElementById("comboDisplay"); const bgmToggleBtn = document.getElementById("bgmToggleBtn");
+    const modeSelectScreen = document.getElementById("modeSelectScreen"); const grade1ModeBtn = document.getElementById("grade1ModeBtn"); const grade4ModeBtn = document.getElementById("grade4ModeBtn"); const startMethodScreen = document.getElementById("startMethodScreen"); const startFromBeginningBtn = document.getElementById("startFromBeginningBtn"); const continueFromLastBtn = document.getElementById("continueFromLastBtn"); const battleScreen = document.getElementById("battleScreen"); const startBtn = document.getElementById("startBtn"); const questionDiv = document.getElementById("question"); const answerChoicesDiv = document.getElementById("answerChoices"); const battleLog = document.getElementById("battleLog"); const enemyArea = document.getElementById("enemyArea"); const enemyName = document.getElementById("enemyName"); const enemyHPText = document.getElementById("enemyHPText"); const enemyHPBar = document.getElementById("enemyHPBar"); const enemyCharacter = document.getElementById("enemyCharacter"); const playerArea = document.getElementById("playerArea"); const playerHPText = document.getElementById("playerHPText"); const playerHPBar = document.getElementById("playerHPBar"); const playerCharacter = document.getElementById("playerCharacter"); const feedbackDisplay = document.getElementById("feedbackDisplay"); const comboDisplay = document.getElementById("comboDisplay"); const bgmToggleBtn = document.getElementById("bgmToggleBtn");
 
-    // --- ★ 効果音とBGMの準備 (変更なし) ★ ---
-    const sounds = { /* ... 省略 ... */ tap: new Audio('tap.mp3'), hitEnemy: new Audio('hit_enemy.mp3'), hitPlayer: new Audio('hit_player.mp3'), wrong: new Audio('wrong.mp3'), enemyDefeated: new Audio('enemy_defeated.mp3'), criticalHit: new Audio('critical_hit.mp3'), bgmNormal: new Audio('bgm_normal.mp3'), bgmBoss: new Audio('bgm_boss.mp3') };
+    // --- 効果音とBGMの準備 ---
+    const sounds = { tap: new Audio('tap.mp3'), hitEnemy: new Audio('hit_enemy.mp3'), hitPlayer: new Audio('hit_player.mp3'), wrong: new Audio('wrong.mp3'), enemyDefeated: new Audio('enemy_defeated.mp3'), criticalHit: new Audio('critical_hit.mp3'), bgmNormal: new Audio('bgm_normal.mp3'), bgmBoss: new Audio('bgm_boss.mp3') };
     sounds.bgmNormal.loop = true; sounds.bgmBoss.loop = true; sounds.bgmNormal.volume = 0.4; sounds.bgmBoss.volume = 0.35; let currentBgm = null;
-    // --- ★ サウンド関数 (変更なし) ★ ---
-    function playSound(soundName) { /* ... 省略 ... */ } function playBgm(bgmName) { /* ... 省略 ... */ } function stopBgm() { /* ... 省略 ... */ } function updateBgmButton() { /* ... 省略 ... */ } function loadBgmSetting() { /* ... 省略 ... */ }
-    bgmToggleBtn.addEventListener('click', () => { /* ... 省略 ... */ isBgmEnabled = !isBgmEnabled; localStorage.setItem(BGM_KEY, JSON.stringify(isBgmEnabled)); updateBgmButton(); if (isBgmEnabled) { if (!currentBgm && battleInProgress) { playBgm(currentEnemy.type === 'boss' ? 'bgmBoss' : 'bgmNormal'); } } else { stopBgm(); } playSound('tap'); });
+    function playSound(soundName) { if (!sounds[soundName]) return; sounds[soundName].currentTime = 0; sounds[soundName].play().catch(error => console.log(`Sound play failed (${soundName}):`, error)); }
+    function playBgm(bgmName) { if (!isBgmEnabled || !sounds[bgmName]) return; if (currentBgm && currentBgm !== sounds[bgmName]) { currentBgm.pause(); } if (sounds[bgmName].paused) { sounds[bgmName].play().catch(error => console.log(`BGM play failed (${bgmName}):`, error)); currentBgm = sounds[bgmName]; } else { currentBgm = sounds[bgmName]; } }
+    function stopBgm() { if (currentBgm) { currentBgm.pause(); currentBgm.currentTime = 0; currentBgm = null; } }
+    function updateBgmButton() { if (isBgmEnabled) { bgmToggleBtn.classList.remove('muted'); bgmToggleBtn.textContent = '🔊'; } else { bgmToggleBtn.classList.add('muted'); bgmToggleBtn.textContent = '🔇'; } }
+    function loadBgmSetting() { const savedSetting = localStorage.getItem(BGM_KEY); isBgmEnabled = (savedSetting !== null) ? JSON.parse(savedSetting) : true; updateBgmButton(); }
+    bgmToggleBtn.addEventListener('click', () => { isBgmEnabled = !isBgmEnabled; localStorage.setItem(BGM_KEY, JSON.stringify(isBgmEnabled)); updateBgmButton(); if (isBgmEnabled) { if (!currentBgm && battleInProgress && currentEnemy) { playBgm(currentEnemy.type === 'boss' ? 'bgmBoss' : 'bgmNormal'); } } else { stopBgm(); } playSound('tap'); });
 
-    const enemies = { /* ... 敵データ省略 ... */ 1: { name: "スライム", emoji: "💧", hp: 10, type: "normal" }, 2: { name: "スライム", emoji: "💧", hp: 13, type: "normal" }, 3: { name: "コウモリ", emoji: "🦇", hp: 16, type: "normal" }, 4: { name: "コウモリ", emoji: "🦇", hp: 20, type: "normal" }, 5: { name: "ボス ゴブリン", emoji: "👺", hp: 30, type: "boss" }, 6: { name: "ゴースト", emoji: "👻", hp: 25, type: "normal" }, 7: { name: "ゴースト", emoji: "👻", hp: 30, type: "normal" }, 8: { name: "スケルトン", emoji: "💀", hp: 35, type: "normal" }, 9: { name: "スケルトン", emoji: "💀", hp: 40, type: "normal" }, 10: { name: "ボス サイクロプス", emoji: "👁️", hp: 55, type: "boss" }, 11: { name: "ゾンビ", emoji: "🧟", hp: 45, type: "normal" }, 12: { name: "ゾンビ", emoji: "🧟", hp: 50, type: "normal" }, 13: { name: "ミノタウロス", emoji: "🐂", hp: 58, type: "normal" }, 14: { name: "ミノタウロス", emoji: "🐂", hp: 65, type: "normal" }, 15: { name: "ボス ドラゴン", emoji: "🐉", hp: 85, type: "boss" } };
+    // --- 敵データ ---
+    const enemies = { 1: { name: "スライム", emoji: "💧", hp: 10, type: "normal" }, 2: { name: "スライム", emoji: "💧", hp: 13, type: "normal" }, 3: { name: "コウモリ", emoji: "🦇", hp: 16, type: "normal" }, 4: { name: "コウモリ", emoji: "🦇", hp: 20, type: "normal" }, 5: { name: "ボス ゴブリン", emoji: "👺", hp: 30, type: "boss" }, 6: { name: "ゴースト", emoji: "👻", hp: 25, type: "normal" }, 7: { name: "ゴースト", emoji: "👻", hp: 30, type: "normal" }, 8: { name: "スケルトン", emoji: "💀", hp: 35, type: "normal" }, 9: { name: "スケルトン", emoji: "💀", hp: 40, type: "normal" }, 10: { name: "ボス サイクロプス", emoji: "👁️", hp: 55, type: "boss" }, 11: { name: "ゾンビ", emoji: "🧟", hp: 45, type: "normal" }, 12: { name: "ゾンビ", emoji: "🧟", hp: 50, type: "normal" }, 13: { name: "ミノタウロス", emoji: "🐂", hp: 58, type: "normal" }, 14: { name: "ミノタウロス", emoji: "🐂", hp: 65, type: "normal" }, 15: { name: "ボス ドラゴン", emoji: "🐉", hp: 85, type: "boss" } };
     const maxStage = Object.keys(enemies).length;
 
-    // --- ★ localStorage関連ヘルパー関数 ★ ---
-    function getHighestStageKey(mode) {
-        return `${HIGHEST_STAGE_KEY_PREFIX}${mode}`; // 例: 'nekobattle_highestStage_grade1'
-    }
-    function saveHighestStage(mode, stage) {
-        const key = getHighestStageKey(mode);
-        const currentHighest = loadHighestStage(mode);
-        if (stage > currentHighest) { // クリアしたステージが記録より高い場合のみ更新
-            localStorage.setItem(key, stage.toString());
-             console.log(`Mode ${mode}: Highest stage ${stage} saved.`); // デバッグ用
-        }
-    }
-    function loadHighestStage(mode) {
-        const key = getHighestStageKey(mode);
-        const savedStage = localStorage.getItem(key);
-        return savedStage ? parseInt(savedStage, 10) : 0; // データがなければ0を返す
-    }
+    // --- localStorage関連 ---
+    function getHighestStageKey(mode) { return `${HIGHEST_STAGE_KEY_PREFIX}${mode}`; }
+    function saveHighestStage(mode, stage) { const key = getHighestStageKey(mode); const currentHighest = loadHighestStage(mode); if (stage > currentHighest && stage <= maxStage) { localStorage.setItem(key, stage.toString()); console.log(`Mode ${mode}: Highest stage ${stage} saved.`); } } // maxStageを超えたら保存しない
+    function loadHighestStage(mode) { const key = getHighestStageKey(mode); const savedStage = localStorage.getItem(key); return savedStage ? parseInt(savedStage, 10) : 0; }
 
-// --- 問題生成関数 ---
+    // --- ★ デバッグ用ログ付き 問題生成関数 ★ ---
     function generateProblems(stage, mode, count) {
-        console.log(`generateProblems called with: stage=${stage}, mode=${mode}, count=${count}`); // ★追加
+        console.log(`generateProblems called with: stage=${stage}, mode=${mode}, count=${count}`); // ★デバッグログ
         const generatedProblems = [];
-        // ... (問題生成ロジックはそのまま) ...
-        console.log("Generated problems array:", generatedProblems); // ★追加 (配列の中身を確認)
+        let num1, num2, answer, questionText, type;
+        for (let i = 0; i < count; i++) {
+            if (mode === 'grade1') { if (stage <= 5) { type = '+'; do { num1 = Math.floor(Math.random() * 10); num2 = Math.floor(Math.random() * (10 - num1)); } while (num1 === 0 && num2 === 0); answer = num1 + num2; } else if (stage <= 10) { type = '+'; num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * 10) + 1; answer = num1 + num2; } else { type = '-'; num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * num1) + 1; answer = num1 - num2; } }
+            else { if (stage <= 4) { type = '+'; num1 = Math.floor(Math.random() * 9) + 1; num2 = Math.floor(Math.random() * 9) + 1; answer = num1 + num2; } else if (stage <= 8) { type = '-'; num1 = Math.floor(Math.random() * 18) + 1; num2 = Math.floor(Math.random() * num1) + 1; answer = num1 - num2; } else if (stage <= 12) { type = '×'; num1 = Math.floor(Math.random() * 8) + 2; num2 = Math.floor(Math.random() * 8) + 2; answer = num1 * num2; } else { type = '÷'; num2 = Math.floor(Math.random() * 8) + 2; answer = Math.floor(Math.random() * 8) + 2; num1 = num2 * answer; } }
+            questionText = `${num1} ${type} ${num2}`;
+            generatedProblems.push({ q: questionText, a: answer });
+        }
         // Fisher-Yatesシャッフル
         for (let i = generatedProblems.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [generatedProblems[i], generatedProblems[j]] = [generatedProblems[j], generatedProblems[i]]; }
+        console.log("Generated problems array:", generatedProblems); // ★デバッグログ
         return generatedProblems;
     }
+    // --- 選択肢生成関数 (変更なし) ---
+    function generateChoices(correct) { /* ... 省略 ... */ }
+    // --- HPバー更新関数 (変更なし) ---
+    function updateHPBar(elementId, currentHP, maxHP) { /* ... 省略 ... */ }
+    // --- キャラ揺れ関数 (変更なし) ---
+    function shakeCharacter(elementId) { /* ... 省略 ... */ }
+    // --- 時間評価表示関数 (変更なし) ---
+    function showFeedback(text, type) { /* ... 省略 ... */ }
+    // --- コンボ表示更新関数 (変更なし) ---
+    function updateComboDisplay() { /* ... 省略 ... */ }
 
-    // --- showQuestion関数 ---
+    // --- ★ デバッグ用ログ付き showQuestion関数 ★ ---
     function showQuestion() {
-        console.log(`showQuestion called. Index: ${currentProblemIndex}, Problems array length: ${problems ? problems.length : 'undefined'}`); // ★追加
-        if (problems && problems.length > currentProblemIndex) { // ★追加: problems配列が存在し、indexが範囲内か確認
-             console.log("Current problem data:", problems[currentProblemIndex]); // ★追加
-        } else {
-             console.error("Problem data is missing or index out of bounds!"); // ★追加: エラーログ
-        }
+        console.log(`showQuestion called. Index: ${currentProblemIndex}, Problems array length: ${problems ? problems.length : 'undefined'}, questionsForThisStage: ${questionsForThisStage}`); // ★デバッグログ
+        if (problems && problems.length > currentProblemIndex) { console.log("Current problem data:", problems[currentProblemIndex]); } // ★デバッグログ
+        else { console.error("Problem data is missing or index out of bounds!"); } // ★デバッグログ
 
         battleInProgress = false;
-        // ★変更: 終了条件を questionsForThisStage で判定
-        if (currentProblemIndex >= questionsForThisStage || playerHP <= 0 || enemyHP <= 0) {
-            endBattle();
-            return;
-        }
-        const p = problems[currentProblemIndex]; // ここでエラーの可能性がある
+        if (currentProblemIndex >= questionsForThisStage || playerHP <= 0 || enemyHP <= 0) { endBattle(); return; }
 
-        // ★追加: pが取得できたかチェック (より安全に)
-        if (!p) {
+        const p = problems[currentProblemIndex];
+        if (!p) { // ★pが取得できなかった場合のガード
             console.error("Failed to get problem data 'p' at index", currentProblemIndex);
             battleLog.textContent = "エラー：問題データの取得に失敗しました。";
-            // endBattle(); // エラー発生時に戦闘を終了させるなど
-            return; // 処理中断
+            endBattle(); // エラー発生時は戦闘終了させる
+            return;
         }
 
-        questionDiv.textContent = p.q; // pが存在すれば安全にアクセスできる
+        questionDiv.textContent = p.q;
         questionStartTime = Date.now();
-        // ... (以下、変更なし) ...
-    }    // --- handleAnswer関数 (変更なし) ---
+        battleLog.textContent = `Lv${currentStage} (${currentProblemIndex + 1}/${questionsForThisStage}) 問題！`; // 問題数表示修正
+
+        const choices = generateChoices(p.a);
+        answerChoicesDiv.innerHTML = "";
+        choices.forEach(choice => { const btn = document.createElement("button"); btn.textContent = choice; btn.className = "choice-btn"; btn.onclick = () => handleAnswer(choice); answerChoicesDiv.appendChild(btn); });
+    }
+
+    // --- handleAnswer関数 (効果音修正含む、変更なし) ---
     function handleAnswer(selectedAnswer) { /* ... 省略 ... */ if (battleInProgress) return; battleInProgress = true; const choiceButtons = answerChoicesDiv.querySelectorAll('.choice-btn'); choiceButtons.forEach(btn => btn.disabled = true); playSound('tap'); const elapsed = (Date.now() - questionStartTime) / 1000; const p = problems[currentProblemIndex]; let feedbackClass = ''; let damageToEnemy = 0; let damageToPlayer = 0; let logMessage = ""; let feedbackText = ""; let feedbackType = ""; let isCritical = false; let criticalTime, perfectTime, greatTime, goodTime, slowPenalty, wrongPenalty; if (gameMode === 'grade1') { criticalTime = 1.5; perfectTime = 2.5; greatTime = 4.0; goodTime = 6.0; slowPenalty = 1; wrongPenalty = 2; } else { criticalTime = 0.8; perfectTime = 1.5; greatTime = 2.5; goodTime = 4.0; slowPenalty = 2; wrongPenalty = 3; } if (selectedAnswer === p.a) { comboCount++; let baseDamage = 0; if (elapsed < criticalTime) { baseDamage = (gameMode === 'grade1' ? 5 : 6); logMessage = `✨Critical Hit!✨ (${elapsed.toFixed(1)}秒) `; feedbackText = "Critical Hit!"; feedbackType = "critical"; isCritical = true; } else if (elapsed < perfectTime) { baseDamage = (gameMode === 'grade1' ? 3 : 4); logMessage = `Perfect! (${elapsed.toFixed(1)}秒) `; feedbackText = "Perfect!"; feedbackType = "perfect"; } else if (elapsed < greatTime) { baseDamage = (gameMode === 'grade1' ? 2 : 2); logMessage = `Great! (${elapsed.toFixed(1)}秒) `; feedbackText = "Great!"; feedbackType = "great"; } else if (elapsed < goodTime) { baseDamage = 1; logMessage = `Good (${elapsed.toFixed(1)}秒) `; feedbackText = "Good"; feedbackType = "good"; } else { damageToPlayer = slowPenalty; logMessage = `Too slow... (${elapsed.toFixed(1)}秒) 自分に${damageToPlayer}ダメージ!`; feedbackText = "Too Slow..."; feedbackType = "slow"; comboCount = 0; } let comboBonus = 0; if (comboCount >= 5) comboBonus = 2; else if (comboCount >= 3) comboBonus = 1; damageToEnemy = baseDamage + comboBonus; if(damageToEnemy > 0) { logMessage += `敵に${damageToEnemy}ダメージ!`; if (comboCount >= 3) logMessage += ` (${comboCount} Combo!)`; feedbackClass = 'feedback-flash'; shakeCharacter('enemyCharacter'); playSound('hitEnemy'); if(isCritical) playSound('criticalHit'); } else if (damageToPlayer > 0) { feedbackClass = 'feedback-damage-player'; shakeCharacter('playerCharacter'); playSound('hitPlayer'); } else { feedbackClass = 'feedback-correct'; } } else { playSound('wrong'); damageToPlayer = wrongPenalty; logMessage = `Wrong! 自分に${damageToPlayer}ダメージ!`; feedbackText = "Wrong!"; feedbackType = "wrong"; feedbackClass = 'feedback-wrong'; comboCount = 0; shakeCharacter('playerCharacter'); playSound('hitPlayer'); } updateComboDisplay(); enemyHP -= damageToEnemy; playerHP -= damageToPlayer; enemyHPText.textContent = Math.max(0, enemyHP); playerHPText.textContent = Math.max(0, playerHP); updateHPBar('enemyHPBar', enemyHP, enemyMaxHP); updateHPBar('playerHPBar', playerHP, playerMaxHP); battleLog.textContent = logMessage; if(feedbackText) showFeedback(feedbackText, feedbackType); if (feedbackClass) { document.body.classList.add(feedbackClass); setTimeout(() => { document.body.classList.remove(feedbackClass); }, 150); } currentProblemIndex++; setTimeout(() => { if (playerHP <= 0 || enemyHP <= 0 || currentProblemIndex >= questionsForThisStage) { endBattle(); } else { showQuestion(); } }, 1000); }
 
-    // --- startBattle関数 (変更なし) ---
+    // --- startBattle関数 (問題数設定含む、変更なし) ---
     function startBattle() { /* ... 省略 ... */ currentEnemy = enemies[currentStage] || enemies[maxStage]; enemyMaxHP = currentEnemy.hp; if (currentEnemy.type === 'boss') { enemyMaxHP = Math.floor(enemyMaxHP * 1.5); } if (gameMode === 'grade1') { enemyMaxHP = Math.max(5, Math.floor(enemyMaxHP * 0.7)); } enemyHP = enemyMaxHP; playerHP = playerMaxHP; currentProblemIndex = 0; comboCount = 0; updateComboDisplay(); questionsForThisStage = (currentEnemy.type === 'boss') ? 20 : 10; problems = generateProblems(currentStage, gameMode, questionsForThisStage); enemyName.textContent = `${currentEnemy.emoji} ${currentEnemy.name} (Lv${currentStage})`; enemyHPText.textContent = enemyHP; playerHPText.textContent = playerHP; updateHPBar('enemyHPBar', enemyHP, enemyMaxHP); updateHPBar('playerHPBar', playerHP, playerMaxHP); enemyCharacter.textContent = currentEnemy.emoji; enemyCharacter.classList.remove('defeated'); stopBgm(); if (currentEnemy.type === 'boss') { document.body.classList.add('boss-battle-bg'); battleLog.textContent = `🔥ボス出現！ ${currentEnemy.name} があらわれた！🔥`; playBgm('bgmBoss'); } else { document.body.classList.remove('boss-battle-bg'); battleLog.textContent = `Lv${currentStage} ${currentEnemy.name} があらわれた！`; playBgm('bgmNormal'); } startBtn.style.display = "none"; battleInProgress = false; setTimeout(showQuestion, 1500); }
 
-    // --- endBattle関数 (★クリア状況保存を追加) ---
-    function endBattle() {
-        battleInProgress = true; answerChoicesDiv.innerHTML = ""; questionDiv.textContent = "Battle End!"; comboDisplay.classList.remove('show'); stopBgm();
-        let resultMessage = ""; let nextButtonText = ""; let isVictory = false;
+    // --- endBattle関数 (クリア状況保存含む、変更なし) ---
+    function endBattle() { /* ... 省略 ... */ battleInProgress = true; answerChoicesDiv.innerHTML = ""; questionDiv.textContent = "Battle End!"; comboDisplay.classList.remove('show'); stopBgm(); let resultMessage = ""; let nextButtonText = ""; let isVictory = false; if (enemyHP <= 0) { isVictory = true; playSound('enemyDefeated'); enemyCharacter.classList.add('defeated'); resultMessage = `🎉勝利！ ${currentEnemy.name} をたおした！🎉`; if (currentEnemy.type === 'boss') { resultMessage += ` すごい！ボスを撃破したぞ！`; } saveHighestStage(gameMode, currentStage); currentStage++; if (currentStage > maxStage) { resultMessage += " 🏆全ステージクリア！おめでとう！🏆"; startBtn.style.display = "none"; } else { nextButtonText = `次の敵 (Lv${currentStage}) と戦う！`; startBtn.style.display = "inline-block"; } } else { resultMessage = playerHP <= 0 ? "😭敗北...また挑戦してね！" : "時間切れ...もう一度挑戦！"; nextButtonText = "再挑戦！"; startBtn.style.display = "inline-block"; } battleLog.textContent = resultMessage; if (nextButtonText) { startBtn.textContent = nextButtonText; } document.body.classList.add(isVictory ? 'feedback-correct' : 'feedback-wrong'); setTimeout(() => { document.body.classList.remove('feedback-correct', 'feedback-wrong', 'boss-battle-bg'); }, 1000); }
 
-        if (enemyHP <= 0) { // 勝利
-            isVictory = true; playSound('enemyDefeated'); enemyCharacter.classList.add('defeated');
-            resultMessage = `🎉勝利！ ${currentEnemy.name} をたおした！🎉`;
-            if (currentEnemy.type === 'boss') { resultMessage += ` すごい！ボスを撃破したぞ！`; }
+    // --- モード選択処理 (変更なし) ---
+    function selectMode(selectedMode) { playSound('tap'); gameMode = selectedMode; highestClearedStage = loadHighestStage(gameMode); modeSelectScreen.style.display = 'none'; startMethodScreen.style.display = 'flex'; if (highestClearedStage > 0 && highestClearedStage < maxStage) { const nextStage = highestClearedStage + 1; continueFromLastBtn.textContent = `つづきから (Lv ${nextStage})`; continueFromLastBtn.style.display = 'inline-block'; continueFromLastBtn.disabled = false; } else { continueFromLastBtn.style.display = 'none'; continueFromLastBtn.disabled = true; } loadBgmSetting(); }
+    // --- スタート方法選択ボタンの処理 (変更なし) ---
+    function startGameFlow() { playSound('tap'); startMethodScreen.style.display = 'none'; battleScreen.style.display = 'flex'; startBattle(); }
+    startFromBeginningBtn.addEventListener('click', () => { currentStage = 1; startGameFlow(); });
+    continueFromLastBtn.addEventListener('click', () => { currentStage = highestClearedStage + 1; if (currentStage > maxStage) currentStage = maxStage; startGameFlow(); });
+    // --- 他のイベントリスナー (変更なし) ---
+    grade1ModeBtn.addEventListener("click", () => selectMode('grade1')); grade4ModeBtn.addEventListener("click", () => selectMode('grade4')); startBtn.addEventListener("click", () => { playSound('tap'); enemyCharacter.classList.remove('defeated'); startBattle(); });
 
-            // ★追加: クリア状況を保存 (現在のステージ番号を保存)
-            saveHighestStage(gameMode, currentStage);
-
-            currentStage++; // 次のステージへ
-            if (currentStage > maxStage) { resultMessage += " 🏆全ステージクリア！おめでとう！🏆"; startBtn.style.display = "none"; }
-            else { nextButtonText = `次の敵 (Lv${currentStage}) と戦う！`; startBtn.style.display = "inline-block"; }
-        } else { // 敗北 or 問題切れ
-             resultMessage = playerHP <= 0 ? "😭敗北...また挑戦してね！" : "時間切れ...もう一度挑戦！";
-             nextButtonText = "再挑戦！"; startBtn.style.display = "inline-block";
-        }
-        battleLog.textContent = resultMessage; if (nextButtonText) { startBtn.textContent = nextButtonText; }
-        document.body.classList.add(isVictory ? 'feedback-correct' : 'feedback-wrong'); setTimeout(() => { document.body.classList.remove('feedback-correct', 'feedback-wrong', 'boss-battle-bg'); }, 1000);
-    }
-
-    // --- ★ モード選択後の処理を変更 ★ ---
-    function selectMode(selectedMode) {
-        playSound('tap');
-        gameMode = selectedMode; // モードを設定
-        highestClearedStage = loadHighestStage(gameMode); // 最高クリアステージを読み込み
-
-        modeSelectScreen.style.display = 'none'; // モード選択画面を隠す
-        startMethodScreen.style.display = 'flex'; // スタート方法選択画面を表示
-
-        // 「つづきから」ボタンの設定
-        if (highestClearedStage > 0 && highestClearedStage < maxStage) {
-            const nextStage = highestClearedStage + 1;
-            continueFromLastBtn.textContent = `つづきから (Lv ${nextStage})`;
-            continueFromLastBtn.style.display = 'inline-block'; // 表示
-            continueFromLastBtn.disabled = false; // 有効化
-        } else {
-            continueFromLastBtn.style.display = 'none'; // 非表示
-             continueFromLastBtn.disabled = true; // 無効化 (念のため)
-        }
-         // BGM設定読み込み (ここで呼ぶのが良い)
-         loadBgmSetting();
-    }
-
-    // --- ★ スタート方法選択ボタンの処理 ★ ---
-    function startGameFlow() {
-        playSound('tap');
-        startMethodScreen.style.display = 'none'; // スタート方法画面を隠す
-        battleScreen.style.display = 'flex'; // バトル画面を表示
-        startBattle(); // バトル開始 (currentStage は設定済み)
-    }
-
-    startFromBeginningBtn.addEventListener('click', () => {
-        currentStage = 1; // 必ずレベル1から
-        startGameFlow();
-    });
-
-    continueFromLastBtn.addEventListener('click', () => {
-        // highestClearedStage は selectMode で読み込み済み
-        currentStage = highestClearedStage + 1; // 次のステージから
-        // currentStageがmaxStageを超えないように念のためチェック
-        if (currentStage > maxStage) currentStage = maxStage;
-        startGameFlow();
-    });
-
-
-    // --- 他のイベントリスナー ---
-    grade1ModeBtn.addEventListener("click", () => selectMode('grade1'));
-    grade4ModeBtn.addEventListener("click", () => selectMode('grade4'));
-    // 「次へ/再挑戦」ボタン (startBtn) の処理
-    startBtn.addEventListener("click", () => {
-        playSound('tap');
-        enemyCharacter.classList.remove('defeated');
-        // currentStageはendBattleで更新されているのでそのままstartBattleを呼ぶ
-        startBattle();
-    });
-
-    // --- 初期化処理 ---
-    loadBgmSetting(); // BGM設定読み込み
-    playerHPText.textContent = playerHP;
-    updateHPBar('playerHPBar', playerHP, playerMaxHP);
-    // ゲーム開始時にモード選択画面を表示するため、他は不要
+    // --- 初期化処理 (変更なし) ---
+    loadBgmSetting(); playerHPText.textContent = playerHP; updateHPBar('playerHPBar', playerHP, playerMaxHP);
 
   </script>
 </body>
