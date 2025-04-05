@@ -95,8 +95,42 @@
     function loadBgmSetting() { const savedSetting = localStorage.getItem(BGM_KEY); isBgmEnabled = (savedSetting !== null) ? JSON.parse(savedSetting) : true; updateBgmButton(); }
     bgmToggleBtn.addEventListener('click', () => { isBgmEnabled = !isBgmEnabled; localStorage.setItem(BGM_KEY, JSON.stringify(isBgmEnabled)); updateBgmButton(); if (isBgmEnabled) { if (!currentBgm && battleInProgress && currentEnemy) { playBgm(currentEnemy.type === 'boss' ? 'bgmBoss' : 'bgmNormal'); } } else { stopBgm(); } playSound('tap'); });
 
-    // --- 敵データ ---
-    const enemies = { 1: { name: "スライム", emoji: "💧", hp: 10, type: "normal" }, 2: { name: "スライム", emoji: "💧", hp: 13, type: "normal" }, 3: { name: "コウモリ", emoji: "🦇", hp: 16, type: "normal" }, 4: { name: "コウモリ", emoji: "🦇", hp: 20, type: "normal" }, 5: { name: "ボス ゴブリン", emoji: "👺", hp: 30, type: "boss" }, 6: { name: "ゴースト", emoji: "👻", hp: 25, type: "normal" }, 7: { name: "ゴースト", emoji: "👻", hp: 30, type: "normal" }, 8: { name: "スケルトン", emoji: "💀", hp: 35, type: "normal" }, 9: { name: "スケルトン", emoji: "💀", hp: 40, type: "normal" }, 10: { name: "ボス サイクロプス", emoji: "👁️", hp: 55, type: "boss" }, 11: { name: "ゾンビ", emoji: "🧟", hp: 45, type: "normal" }, 12: { name: "ゾンビ", emoji: "🧟", hp: 50, type: "normal" }, 13: { name: "ミノタウロス", emoji: "🐂", hp: 58, type: "normal" }, 14: { name: "ミノタウロス", emoji: "🐂", hp: 65, type: "normal" }, 15: { name: "ボス ドラゴン", emoji: "🐉", hp: 85, type: "boss" } };
+    // --- ★ 敵データ Lv30まで拡張 ★ ---
+    const enemies = {
+        // Normal Stages 1-4 (スライム、コウモリ)
+        1: { name: "スライム", emoji: "💧", hp: 10, type: "normal" }, 2: { name: "スライム", emoji: "💧", hp: 13, type: "normal" },
+        3: { name: "コウモリ", emoji: "🦇", hp: 16, type: "normal" }, 4: { name: "コウモリ", emoji: "🦇", hp: 20, type: "normal" },
+        // Boss Stage 5
+        5: { name: "ボス ゴブリン", emoji: "👺", hp: 30, type: "boss" },
+        // Normal Stages 6-9 (ゴースト、スケルトン)
+        6: { name: "ゴースト", emoji: "👻", hp: 25, type: "normal" }, 7: { name: "ゴースト", emoji: "👻", hp: 30, type: "normal" },
+        8: { name: "スケルトン", emoji: "💀", hp: 35, type: "normal" }, 9: { name: "スケルトン", emoji: "💀", hp: 40, type: "normal" },
+        // Boss Stage 10
+        10: { name: "ボス サイクロプス", emoji: "👁️", hp: 55, type: "boss" },
+        // Normal Stages 11-14 (ゾンビ、ミノタウロス)
+        11: { name: "ゾンビ", emoji: "🧟", hp: 45, type: "normal" }, 12: { name: "ゾンビ", emoji: "🧟", hp: 50, type: "normal" },
+        13: { name: "ミノタウロス", emoji: "🐂", hp: 58, type: "normal" }, 14: { name: "ミノタウロス", emoji: "🐂", hp: 65, type: "normal" },
+        // Boss Stage 15
+        15: { name: "ボス ドラゴン", emoji: "🐉", hp: 85, type: "boss" },
+         // Normal Stages 16-19 (ゴーレム、キメラ)
+        16: { name: "ゴーレム", emoji: "🗿", hp: 75, type: "normal" }, 17: { name: "ゴーレム", emoji: "🗿", hp: 82, type: "normal" },
+        18: { name: "キメラ", emoji: "🦁🐐🐍", hp: 90, type: "normal" }, 19: { name: "キメラ", emoji: "🦁🐐🐍", hp: 100, type: "normal" },
+        // Boss Stage 20
+        20: { name: "ボス グリフォン", emoji: "🦅🦁", hp: 130, type: "boss" },
+        // Normal Stages 21-24 (魔道士、リッチ)
+        21: { name: "魔道士", emoji: "🧙", hp: 110, type: "normal" }, 22: { name: "魔道士", emoji: "🧙", hp: 120, type: "normal" },
+        23: { name: "リッチ", emoji: " Lich", hp: 135, type: "normal" }, // 絵文字がない場合
+        24: { name: "リッチ", emoji: " Lich", hp: 150, type: "normal" },
+        // Boss Stage 25
+        25: { name: "ボス デーモン", emoji: "👿", hp: 180, type: "boss" },
+        // Normal Stages 26-29 (強化系)
+        26: { name: "強化スライム", emoji: "✨💧", hp: 160, type: "normal" },
+        27: { name: "強化ゴーレム", emoji: "✨🗿", hp: 175, type: "normal" },
+        28: { name: "ダークナイト", emoji: " B.Knight", hp: 190, type: "normal" },
+        29: { name: "ダークナイト", emoji: " B.Knight", hp: 210, type: "normal" },
+        // Final Boss Stage 30
+        30: { name: "魔王ニャンデビル", emoji: "😈👑", hp: 250, type: "boss" },
+    };
     const maxStage = Object.keys(enemies).length;
 
     // --- localStorage関連 ---
@@ -104,62 +138,121 @@
     function saveHighestStage(mode, stage) { const key = getHighestStageKey(mode); const currentHighest = loadHighestStage(mode); if (stage > currentHighest && stage <= maxStage) { localStorage.setItem(key, stage.toString()); console.log(`Mode ${mode}: Highest stage ${stage} saved.`); } }
     function loadHighestStage(mode) { const key = getHighestStageKey(mode); const savedStage = localStorage.getItem(key); return savedStage ? parseInt(savedStage, 10) : 0; }
 
-    // --- 問題生成関数 ---
+    // --- ★ 問題生成関数 (Lv30まで対応、難易度再設計) ★ ---
     function generateProblems(stage, mode, count) {
         const generatedProblems = [];
-        let num1, num2, answer, questionText, type;
+        let num1, num2, num3, answer, questionText, type;
+
         for (let i = 0; i < count; i++) {
             if (mode === 'grade1') { // 小1モード
-                if (stage <= 5) { // 簡単足し算
-                    type = '+';
-                    do { num1 = Math.floor(Math.random() * 10); num2 = Math.floor(Math.random() * (10 - num1)); } while (num1 === 0 && num2 === 0);
-                    answer = num1 + num2;
-                } else if (stage <= 10) { // 繰り上がり含む足し算
-                    type = '+';
-                    num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * 10) + 1;
-                    answer = num1 + num2;
-                } else { // 簡単引き算
-                    type = '-';
-                    num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * num1) + 1;
-                    answer = num1 - num2;
+                if (stage <= 5) { // Lv1-5: 簡単なたし算 (繰り上がりなし)
+                    type = '+'; do { num1 = Math.floor(Math.random() * 10); num2 = Math.floor(Math.random() * (10 - num1)); } while (num1 === 0 && num2 === 0); answer = num1 + num2; questionText = `${num1} + ${num2}`;
+                } else if (stage <= 10) { // Lv6-10: たし算 (繰り上がりあり)
+                    type = '+'; num1 = Math.floor(Math.random() * 9) + 1; num2 = Math.floor(Math.random() * 9) + 1; answer = num1 + num2; questionText = `${num1} + ${num2}`;
+                } else if (stage <= 15) { // Lv11-15: 簡単なひき算 (答え>=0)
+                    type = '-'; num1 = Math.floor(Math.random() * 10) + 5; num2 = Math.floor(Math.random() * num1) + 1; answer = num1 - num2; questionText = `${num1} - ${num2}`;
+                } else if (stage <= 20) { // Lv16-20: たし算・ひき算ミックス
+                    if (Math.random() < 0.6) { type = '+'; num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * 10) + 1; answer = num1 + num2; questionText = `${num1} + ${num2}`; }
+                    else { type = '-'; num1 = Math.floor(Math.random() * 15) + 5; num2 = Math.floor(Math.random() * num1) + 1; answer = num1 - num2; questionText = `${num1} - ${num2}`; }
+                } else if (stage <= 25) { // Lv21-25: 簡単なたし算虫食い算 (?+b=c or a+?=c)
+                    type = '+'; num2 = Math.floor(Math.random() * 8) + 1; answer = Math.floor(Math.random() * 8) + 1; num1 = answer + num2; // a+b=c -> c-b=a or c-a=b
+                    if (Math.random() < 0.5) { questionText = `? + ${num2} = ${num1}`; } else { questionText = `${answer} + ? = ${num1}`; }
+                } else { // Lv26-30: 繰り上がり/下がり考慮の虫食い算
+                    if (Math.random() < 0.5) { // a + ? = c (繰り上がりあり)
+                         type = '+'; num1 = Math.floor(Math.random() * 9) + 1; answer = Math.floor(Math.random() * 9) + 1; num2 = num1 + answer; questionText = `${num1} + ? = ${num2}`;
+                    } else { // a - ? = c (繰り下がりあり)
+                        type = '-'; num1 = Math.floor(Math.random() * 10) + 10; // 10-19
+                        answer = Math.floor(Math.random() * 8) + 1; // 引く数 1-8
+                        num2 = num1 - answer; // 答え
+                        questionText = `${num1} - ? = ${num2}`;
+                    }
                 }
             } else { // 小4モード
-                if (stage <= 4) { // 1桁足し算
-                    type = '+';
-                    num1 = Math.floor(Math.random() * 9) + 1; num2 = Math.floor(Math.random() * 9) + 1;
-                    answer = num1 + num2;
-                } else if (stage <= 8) { // 引き算
-                    type = '-';
-                    num1 = Math.floor(Math.random() * 18) + 1; num2 = Math.floor(Math.random() * num1) + 1;
-                    answer = num1 - num2;
-                } else if (stage <= 12) { // 掛け算 (九九)
-                    type = '×';
-                    num1 = Math.floor(Math.random() * 8) + 2; num2 = Math.floor(Math.random() * 8) + 2;
-                    answer = num1 * num2;
-                } else { // 割り算 (九九範囲)
-                    type = '÷';
-                    num2 = Math.floor(Math.random() * 8) + 2; // 割る数 2-9
-                    answer = Math.floor(Math.random() * 8) + 2; // 答え 2-9
-                    num1 = num2 * answer; // 割られる数
+                if (stage <= 3) { // Lv1-3: 1桁たし算・ひき算
+                    if (Math.random() < 0.5) { type = '+'; num1 = Math.floor(Math.random() * 9) + 1; num2 = Math.floor(Math.random() * 9) + 1; answer = num1 + num2; questionText = `${num1} + ${num2}`; }
+                    else { type = '-'; num1 = Math.floor(Math.random() * 18) + 1; num2 = Math.floor(Math.random() * num1) + 1; answer = num1 - num2; questionText = `${num1} - ${num2}`; }
+                } else if (stage <= 8) { // Lv4-8: 掛け算 (九九)
+                    type = '×'; num1 = Math.floor(Math.random() * 8) + 2; num2 = Math.floor(Math.random() * 8) + 2; answer = num1 * num2; questionText = `${num1} × ${num2}`;
+                } else if (stage <= 15) { // Lv9-15: 割り算 (九九範囲、余りなし)
+                    type = '÷'; num2 = Math.floor(Math.random() * 8) + 2; answer = Math.floor(Math.random() * 8) + 2; num1 = num2 * answer; questionText = `${num1} ÷ ${num2}`;
+                } else if (stage <= 20) { // Lv16-20: 2桁±1桁 or 九九復習
+                     if (Math.random() < 0.6) { // 2桁計算
+                         if (Math.random() < 0.5) { type = '+'; num1 = Math.floor(Math.random() * 90) + 10; num2 = Math.floor(Math.random() * 9) + 1; answer = num1 + num2; questionText = `${num1} + ${num2}`; }
+                         else { type = '-'; num1 = Math.floor(Math.random() * 90) + 10; num2 = Math.floor(Math.random() * 9) + 1; answer = num1 - num2; questionText = `${num1} - ${num2}`; }
+                     } else { // 九九
+                         type = '×'; num1 = Math.floor(Math.random() * 8) + 2; num2 = Math.floor(Math.random() * 8) + 2; answer = num1 * num2; questionText = `${num1} × ${num2}`;
+                     }
+                } else if (stage <= 25) { // Lv21-25: 掛け算・割り算虫食い算
+                    if (Math.random() < 0.5) { // ? x b = c or a x ? = c
+                        type = '×'; num2 = Math.floor(Math.random() * 8) + 2; answer = Math.floor(Math.random() * 8) + 2; num1 = num2 * answer;
+                        if (Math.random() < 0.5) { questionText = `? × ${num2} = ${num1}`; } else { questionText = `${answer} × ? = ${num1}`; }
+                    } else { // a / ? = c or ? / b = c
+                        type = '÷'; num2 = Math.floor(Math.random() * 8) + 2; answer = Math.floor(Math.random() * 8) + 2; num1 = num2 * answer;
+                        if (Math.random() < 0.5) { questionText = `${num1} ÷ ? = ${answer}`; } else { questionText = `? ÷ ${num2} = ${answer}`; }
+                    }
+                } else { // Lv26-30: 少し難しい掛け算/割り算、虫食い算ミックス
+                     const rand = Math.random();
+                     if (rand < 0.3) { // 2桁 x 1桁 (例: 15x3)
+                         type = '×'; num1 = Math.floor(Math.random() * 6) + 10; num2 = Math.floor(Math.random() * 8) + 2; answer = num1 * num2; questionText = `${num1} × ${num2}`;
+                     } else if (rand < 0.6) { // 少し難しい割り算 (例: 45 / 3)
+                         type = '÷'; answer = Math.floor(Math.random() * 8) + 5; num2 = Math.floor(Math.random() * 3) + 2; num1 = num2 * answer; questionText = `${num1} ÷ ${num2}`;
+                     } else { // 虫食い算 (掛け算/割り算)
+                         if (Math.random() < 0.5) { type = '×'; num2 = Math.floor(Math.random() * 8) + 2; answer = Math.floor(Math.random() * 8) + 2; num1 = num2 * answer; if (Math.random() < 0.5) { questionText = `? × ${num2} = ${num1}`; } else { questionText = `${answer} × ? = ${num1}`; } }
+                         else { type = '÷'; num2 = Math.floor(Math.random() * 8) + 2; answer = Math.floor(Math.random() * 8) + 2; num1 = num2 * answer; if (Math.random() < 0.5) { questionText = `${num1} ÷ ? = ${answer}`; } else { questionText = `? ÷ ${num2} = ${answer}`; } }
+                     }
                 }
             }
-            questionText = `${num1} ${type} ${num2}`;
             generatedProblems.push({ q: questionText, a: answer });
         }
-        // Fisher-Yatesシャッフル
+        // シャッフル
         for (let i = generatedProblems.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [generatedProblems[i], generatedProblems[j]] = [generatedProblems[j], generatedProblems[i]]; }
         return generatedProblems;
     }
 
-    // --- 選択肢生成関数 ---
+    // --- ★ 選択肢生成関数 (整数のみ生成するように修正) ★ ---
     function generateChoices(correct) {
-        const choices = new Set(); choices.add(correct); let attempts = 0;
-        while (choices.size < 6 && attempts < 50) {
-            const range = Math.max(5, Math.abs(correct) * 0.5); const delta = Math.floor(Math.random() * (range * 2 + 1)) - range + (Math.random() < 0.1 ? (Math.random() < 0.5 ? 10 : -10) : 0 ); const choice = correct + delta;
-            if (choice !== correct && choice >= 0 && !choices.has(choice)) { choices.add(choice); } attempts++;
+        const choices = new Set();
+        choices.add(correct); // 正解を追加
+        const maxAttempts = 50;
+        let attempts = 0;
+
+        // 誤答を生成
+        while (choices.size < 6 && attempts < maxAttempts) {
+            let wrongAnswer;
+            const magnitude = Math.max(1, Math.abs(correct)); // 答えの大きさに基づく範囲
+            const range = Math.min(10, Math.ceil(magnitude * 0.5) + 3); // 周辺の範囲を決定 (最大±10程度)
+            let delta = Math.floor(Math.random() * (range * 2 + 1)) - range; // 正解値からの差分を生成
+
+            // 差分が0にならないように調整 (正解と同じにならないように)
+            if (delta === 0) delta = Math.random() < 0.5 ? 1 : -1;
+
+            wrongAnswer = correct + delta;
+
+            // 候補が0未満、または既にセットに含まれていたら再試行
+            if (wrongAnswer >= 0 && !choices.has(wrongAnswer)) {
+                choices.add(wrongAnswer); // ★ 整数なので floor 不要
+            }
+            attempts++;
         }
-        let filler = 1; while (choices.size < 6) { const fillChoice = Math.max(0, correct + filler); if (!choices.has(fillChoice)) { choices.add(fillChoice); } filler++; if (filler > 10) break; }
-        const choiceArray = Array.from(choices); choiceArray.sort(() => Math.random() - 0.5);
+
+        // 不足分を補う
+        let filler = 1;
+        while (choices.size < 6) {
+            let fillChoice = correct + filler;
+            if (fillChoice < 0 || choices.has(fillChoice)) { // 負の数 or 重複なら逆方向
+                fillChoice = correct - filler;
+            }
+            fillChoice = Math.max(0, fillChoice); // 0未満にならないように
+
+            if (!choices.has(fillChoice)) {
+                choices.add(fillChoice);
+            }
+            filler++;
+            if (filler > correct + 15) break; // 無限ループ防止
+        }
+
+        const choiceArray = Array.from(choices);
+        choiceArray.sort(() => Math.random() - 0.5);
         return choiceArray;
     }
 
@@ -186,7 +279,7 @@
         choices.forEach(choice => { const btn = document.createElement("button"); btn.textContent = choice; btn.className = "choice-btn"; btn.onclick = () => handleAnswer(choice); answerChoicesDiv.appendChild(btn); });
     }
 
-    // --- handleAnswer関数 ---
+    // --- ★ handleAnswer関数 (クリティカル判定緩和) ★ ---
     function handleAnswer(selectedAnswer) {
         if (battleInProgress) return;
         battleInProgress = true;
@@ -198,9 +291,10 @@
         const p = problems[currentProblemIndex];
         let feedbackClass = ''; let damageToEnemy = 0; let damageToPlayer = 0;
         let logMessage = ""; let feedbackText = ""; let feedbackType = ""; let isCritical = false;
+
         let criticalTime, perfectTime, greatTime, goodTime, slowPenalty, wrongPenalty;
         if (gameMode === 'grade1') { criticalTime = 1.5; perfectTime = 2.5; greatTime = 4.0; goodTime = 6.0; slowPenalty = 1; wrongPenalty = 2; }
-        else { criticalTime = 0.8; perfectTime = 1.5; greatTime = 2.5; goodTime = 4.0; slowPenalty = 2; wrongPenalty = 3; }
+        else { criticalTime = 1.0; perfectTime = 1.8; greatTime = 3.0; goodTime = 4.5; slowPenalty = 2; wrongPenalty = 3; } // ★変更: 小4モードの時間基準を全体的に少し緩和 (Critical 0.8->1.0)
 
         if (selectedAnswer === p.a) { // 正解
             comboCount++; let baseDamage = 0;
