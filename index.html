@@ -4,14 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ねこスピードチャレンジ</title>
+  <!-- フォント読み込み -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
+    /* ベースのスタイル */
     body {
       font-family: 'M PLUS Rounded 1c', sans-serif;
       text-align: center;
-      background-color: #f0f8ff;
+      background-color: #f0f8ff; /* AliceBlue */
       margin: 0;
       padding: 15px;
       overflow-x: hidden;
@@ -25,8 +28,17 @@
       height: 100%;
       color: #444;
     }
-    html { height: 100%; }
-    h1 { font-size: 2.2em; color: #4682b4; margin-top: 20px; margin-bottom: 15px; font-weight: 700; }
+    html {
+      height: 100%;
+    }
+    h1 {
+      font-size: 2.2em;
+      color: #4682b4;
+      margin-top: 20px;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+    /* 問題表示 */
     #question {
       font-size: 4.5em;
       margin: 30px 0;
@@ -37,25 +49,48 @@
       opacity: 1;
       transform: scale(1);
     }
-    #coinInfo, #questionNumber, #timer, #titleBadge, #info {
+    /* 情報表示 */
+    #coinInfo,
+    #questionNumber,
+    #timer,
+    #titleBadge,
+    #info {
       font-size: 1.1em;
       color: #555;
       margin: 3px 0;
     }
-    #titleBadge { color: #ff6347; font-weight: 700; min-height: 1.3em; }
+    #titleBadge {
+      color: #ff6347;
+      font-weight: 700;
+      min-height: 1.3em;
+    }
+    /* ボタン共通 */
     #startBtn, #homeBtn, #rankBtn, #shopBtn, .shop-item button {
       font-family: 'M PLUS Rounded 1c', sans-serif;
-      font-size: 1.3em; padding: 10px 25px; margin: 10px;
-      border: none; border-radius: 30px; background-color: #ffb6c1;
-      color: white; cursor: pointer;
+      font-size: 1.3em;
+      padding: 10px 25px;
+      margin: 10px;
+      border: none;
+      border-radius: 30px;
+      background-color: #ffb6c1;
+      color: white;
+      cursor: pointer;
       transition: background-color 0.2s, transform 0.1s;
-      font-weight: 700; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      font-weight: 700;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    #startBtn:hover, #homeBtn:hover, #rankBtn:hover, #shopBtn:hover, .shop-item button:hover { background-color: #ff9aaa; }
-    #startBtn:active, #homeBtn:active, #rankBtn:active, #shopBtn:active, .shop-item button:active {
-      transform: scale(0.97); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    #startBtn:hover, #homeBtn:hover, #rankBtn:hover, #shopBtn:hover,
+    .shop-item button:hover {
+      background-color: #ff9aaa;
     }
-    #rankList, #shopModal {
+    #startBtn:active, #homeBtn:active, #rankBtn:active, #shopBtn:active,
+    .shop-item button:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    /* ランク表＆ショップモーダル */
+    #rankList,
+    #shopModal {
       display: none;
       margin-top: 25px;
       background: #ffffff;
@@ -71,28 +106,80 @@
       border: 1px solid #ddd;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    .shop-item { margin: 10px 0; font-size: 1.1em; }
-    .shop-item button { margin-left: 10px; border-radius: 10px; }
+    #rankList h2 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #ff6347;
+      font-size: 1.4em;
+      font-weight: 700;
+    }
+    #rankList ul {
+      list-style: none;
+      padding: 0;
+    }
+    #rankList li {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #eee;
+      line-height: 1.5;
+    }
+    #rankList li:last-child {
+      border-bottom: none;
+    }
+    .shop-item {
+      margin: 10px 0;
+      font-size: 1.1em;
+    }
+    .shop-item button {
+      margin-left: 10px;
+      border-radius: 10px;
+    }
+    .highlight {
+      color: #ff6347;
+      font-weight: bold;
+    }
     @media (max-width: 600px) {
-      body { padding: 10px; padding-bottom: 20px; }
-      h1 { font-size: 1.8em; }
-      #question { font-size: 3.5em; margin: 20px 0; }
+      body {
+        padding: 10px;
+        padding-bottom: 20px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+      #question {
+        font-size: 3.5em;
+        margin: 20px 0;
+      }
     }
+    /* フェードイン＋スケールアップアニメーション */
     @keyframes fadeInScaleUp {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
-    .animate-reveal { animation: fadeInScaleUp 0.3s ease-out; }
+    .animate-reveal {
+      animation: fadeInScaleUp 0.3s ease-out;
+    }
   </style>
 </head>
 <body>
   <h1>ねこスピードチャレンジ</h1>
+  <!-- コイン量表示 -->
   <div id="coinInfo">💰 ねこコイン: 0</div>
+  <!-- 説明文など -->
   <div id="info">スタートボタンを押してね</div>
   <div id="questionNumber"></div>
   <div id="timer"></div>
   <div id="question">🐱</div>
   <div id="titleBadge"></div>
+
+  <!-- ランク表 -->
   <div id="rankList">
     <h2>🏅 称号と報酬一覧</h2>
     <ul>
@@ -109,27 +196,63 @@
       <li>🐌 まったりねこ：10コイン（70.1秒～）</li>
     </ul>
   </div>
+
+  <!-- ボタンたち -->
   <button id="startBtn">スタート</button>
   <button id="homeBtn" style="display: none;">ホームにもどる</button>
   <button id="rankBtn">称号一覧</button>
   <button id="shopBtn">ショップ</button>
+
+  <!-- ショップモーダル -->
   <div id="shopModal">
     <h2>ねこショップ</h2>
     <div id="shopItems"></div>
     <button id="closeShop">とじる</button>
   </div>
+
   <script>
-    // コイン管理
+    /* ===============================
+       1) 変数・要素取得
+    =============================== */
+    const totalQuestions = 30;
+    let problems = [];
+    let selected = [];
+    let index = 0;
+    let showingAnswer = false;
+    let startTime = null;
+    let gameStarted = false;
+    let timerInterval;
+
+    // 要素取得
+    const question = document.getElementById("question");
+    const questionNumber = document.getElementById("questionNumber");
+    const timer = document.getElementById("timer");
+    const info = document.getElementById("info");
+    const titleBadge = document.getElementById("titleBadge");
+    const startBtn = document.getElementById("startBtn");
+    const homeBtn = document.getElementById("homeBtn");
+    const coinInfo = document.getElementById("coinInfo");
+    const rankBtn = document.getElementById("rankBtn");
+    const rankList = document.getElementById("rankList");
+    const shopBtn = document.getElementById("shopBtn");
+    const shopModal = document.getElementById("shopModal");
+
+    /* ===============================
+       2) コイン管理
+    =============================== */
     function getCoins() {
       return parseInt(localStorage.getItem("coins") || "0");
     }
     function setCoins(value) {
       localStorage.setItem("coins", value);
-      document.getElementById("coinInfo").textContent = `💰 ねこコイン: ${value}`;
+      coinInfo.textContent = `💰 ねこコイン: ${value}`;
     }
+    // 起動時にコインを表示
     setCoins(getCoins());
 
-    // ショップ機能
+    /* ===============================
+       3) ショップ機能
+    =============================== */
     const shopItemsData = [
       { id: "cat1", emoji: "🐱", name: "ノーマルねこ", price: 0 },
       { id: "cat2", emoji: "😺", name: "スマイルねこ", price: 100 },
@@ -141,31 +264,40 @@
       { id: "bg2", emoji: "🌅", name: "ゆうやけ", price: 120 },
       { id: "bg3", emoji: "🌌", name: "よるのそら", price: 150 }
     ];
+
     function renderShopItems() {
       const shopItemsContainer = document.getElementById("shopItems");
       shopItemsContainer.innerHTML = "";
       const owned = JSON.parse(localStorage.getItem("ownedItems") || "[]");
+
       shopItemsData.forEach(item => {
         const isOwned = owned.includes(item.id);
         const div = document.createElement("div");
         div.className = "shop-item";
+
+        // 商品の表示
         div.innerHTML = `${item.emoji} ${item.name} - ${item.price}コイン`;
+
+        // 「買う」ボタンの表示・非表示
         if (item.price > 0 && !isOwned) {
           const btn = document.createElement("button");
           btn.textContent = "買う";
           btn.addEventListener("click", () => buyItem(item));
           div.appendChild(btn);
         } else {
+          // 価格が0 or すでに購入済み
           div.innerHTML += isOwned ? " ✅ 購入済" : " 🎁 初期装備";
         }
         shopItemsContainer.appendChild(div);
       });
     }
+
     function buyItem(item) {
       const coins = getCoins();
       if (coins >= item.price) {
-        const newCoins = coins - item.price;
-        setCoins(newCoins);
+        // コインを差し引き
+        setCoins(coins - item.price);
+        // 所持アイテムに追加
         const owned = JSON.parse(localStorage.getItem("ownedItems") || "[]");
         owned.push(item.id);
         localStorage.setItem("ownedItems", JSON.stringify(owned));
@@ -175,19 +307,230 @@
         alert("コインが足りないよ！");
       }
     }
-    document.getElementById("shopBtn").addEventListener("click", () => {
+
+    // ショップボタン・閉じるボタン
+    shopBtn.addEventListener("click", () => {
       renderShopItems();
-      document.getElementById("shopModal").style.display = "block";
+      shopModal.style.display = "block";
     });
     document.getElementById("closeShop").addEventListener("click", () => {
-      document.getElementById("shopModal").style.display = "none";
+      shopModal.style.display = "none";
     });
 
-    // 称号トグル
-    document.getElementById("rankBtn").addEventListener("click", () => {
-      const list = document.getElementById("rankList");
-      list.style.display = list.style.display === "none" ? "block" : "none";
+    /* ===============================
+       4) 称号判定・タイム管理
+    =============================== */
+    // 称号リスト
+    const ranks = [
+      { maxTime: 30.0, title: "🚀 光速のネコ", coins: 150 },
+      { maxTime: 35.0, title: "✨ 神速のネコ", coins: 130 },
+      { maxTime: 38.0, title: "⚡ とてもはやねこ", coins: 115 },
+      { maxTime: 41.0, title: "🏃‍♂️ はやねこ", coins: 100 },
+      { maxTime: 44.0, title: "🐾 ちょいはやねこ", coins: 90 },
+      { maxTime: 47.0, title: "🐱 がんばりねこ", coins: 80 },
+      { maxTime: 50.0, title: "😺 ふつうねこ", coins: 70 },
+      { maxTime: 53.0, title: "😸 ふつうよりちょいのんびりねこ", coins: 55 },
+      { maxTime: 55.0, title: "🐢 のんびりねこ", coins: 45 },
+      { maxTime: 70.0, title: "💤 ねむたいねこ", coins: 30 },
+      { maxTime: Infinity, title: "🐌 まったりねこ", coins: 10 }
+    ];
+
+    // タイムからランクを取得
+    function getRank(time) {
+      const numericTime = parseFloat(time);
+      for (const rank of ranks) {
+        if (numericTime <= rank.maxTime) {
+          return rank;
+        }
+      }
+      // 念のため最後を返す
+      return ranks[ranks.length - 1];
+    }
+
+    // タイマー更新
+    function updateTimer() {
+      const now = Date.now();
+      const elapsed = ((now - startTime) / 1000).toFixed(1);
+      timer.textContent = `タイム: ${elapsed} 秒`;
+    }
+
+    // 称号一覧ボタンのクリック
+    rankBtn.addEventListener("click", () => {
+      rankList.style.display = (rankList.style.display === "none") ? "block" : "none";
     });
+
+    // ランクボタンの表示/非表示を切り替える
+    function toggleRankButton(show) {
+      rankBtn.style.display = show ? "inline-block" : "none";
+    }
+
+    /* ===============================
+       5) 計算問題の生成
+    =============================== */
+    function generateProblems() {
+      problems = [];
+
+      // 2〜9の掛け算・割り算パターンを生成
+      for (let a = 2; a < 10; a++) {
+        for (let b = 2; b < 10; b++) {
+          // かけ算
+          problems.push({ q: `${a} × ${b}`, a: a * b });
+          // 割り算(割り切れる場合のみ追加)
+          if ((a * b) % a === 0) {
+            problems.push({ q: `${a * b} ÷ ${a}`, a: b });
+          }
+          if (a !== b && (a * b) % b === 0) {
+            problems.push({ q: `${a * b} ÷ ${b}`, a: a });
+          }
+        }
+      }
+
+      // ランダムシャッフル
+      for (let i = problems.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [problems[i], problems[j]] = [problems[j], problems[i]];
+      }
+
+      // 最初のtotalQuestions件を選択
+      selected = problems.slice(0, totalQuestions);
+    }
+
+    /* ===============================
+       6) 問題表示 & 回答表示
+    =============================== */
+    // 次の問題を表示
+    function showQuestion() {
+      if (index < selected.length) {
+        questionNumber.textContent = `(${index + 1}/${totalQuestions})`;
+        question.textContent = selected[index].q;
+
+        // アニメーション再生（クラス付け外し）
+        question.classList.remove('animate-reveal');
+        void question.offsetWidth; // リフロー強制
+        question.classList.add('animate-reveal');
+
+        showingAnswer = false;
+      } else {
+        // 全部終わったら終了処理
+        endGame();
+      }
+    }
+
+    // 答えを表示
+    function showAnswer() {
+      question.textContent = selected[index].a;
+
+      // アニメーション再生（クラス付け外し）
+      question.classList.remove('animate-reveal');
+      void question.offsetWidth;
+      question.classList.add('animate-reveal');
+
+      showingAnswer = true;
+    }
+
+    // クリック時のステップ
+    function nextStep() {
+      if (!gameStarted) return;
+      if (!showingAnswer) {
+        // まだ答えを見せていない場合は答えを表示
+        showAnswer();
+      } else {
+        // 答えを見た後は次の問題へ
+        index++;
+        showQuestion();
+      }
+    }
+
+    // ゲーム終了
+    function endGame() {
+      toggleRankButton(true);
+      clearInterval(timerInterval);
+      gameStarted = false;
+      homeBtn.style.display = "inline-block";
+
+      const endTime = Date.now();
+      const elapsed = ((endTime - startTime) / 1000).toFixed(1);
+      const resultRank = getRank(elapsed);
+
+      // 結果表示
+      info.innerHTML = `<span class="highlight">おわり！タイム：${elapsed} 秒</span>`;
+      titleBadge.textContent = resultRank.title;
+
+      // コイン付与
+      const earned = resultRank.coins;
+      const current = getCoins();
+      setCoins(current + earned);
+
+      // 少し遅れてアラート
+      setTimeout(() => {
+        alert(`🎉 ${earned} コインを獲得したよ！`);
+      }, 300);
+
+      // スクロール再開
+      document.documentElement.style.overflowY = "auto";
+      document.body.style.overflowY = "auto";
+    }
+
+    /* ===============================
+       7) イベントリスナー
+    =============================== */
+    // スタートボタン
+    startBtn.addEventListener("click", () => {
+      // 画面スクロールをロック
+      document.documentElement.style.overflowY = "hidden";
+      document.body.style.overflowY = "hidden";
+
+      // 表示リセット
+      questionNumber.textContent = "";
+      timer.textContent = "";
+      toggleRankButton(false);
+      rankList.style.display = "none";
+      titleBadge.textContent = "";
+      question.textContent = '';
+      info.textContent = "がんばってね！";
+      homeBtn.style.display = "none";
+      startBtn.style.display = "none";
+
+      // 問題準備
+      generateProblems();
+      index = 0;
+      gameStarted = true;
+
+      // タイマー開始
+      startTime = Date.now();
+      timerInterval = setInterval(updateTimer, 100);
+
+      // 最初の問題表示
+      showQuestion();
+    });
+
+    // ホームボタン
+    homeBtn.addEventListener("click", () => {
+      location.reload();
+    });
+
+    // 画面をクリックで答え or 次の問題
+    document.body.addEventListener("click", (e) => {
+      // ボタンやランクリスト・ショップなどをクリックした場合はゲーム進行しない
+      let targetElement = e.target;
+      let isButtonOrMenu = false;
+      const ignoreIds = ["startBtn", "rankBtn", "homeBtn", "shopBtn", "closeShop", "shopModal", "rankList", "shopItems"];
+      while (targetElement != null) {
+        if (
+          ignoreIds.includes(targetElement.id) ||
+          targetElement.closest('#rankList') ||
+          targetElement.closest('#shopModal')
+        ) {
+          isButtonOrMenu = true;
+          break;
+        }
+        targetElement = targetElement.parentElement;
+      }
+      if (!isButtonOrMenu && gameStarted) {
+        nextStep();
+      }
+    });
+
   </script>
 </body>
 </html>
