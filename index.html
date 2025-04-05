@@ -101,82 +101,218 @@
 
     // --- localStorage関連 ---
     function getHighestStageKey(mode) { return `${HIGHEST_STAGE_KEY_PREFIX}${mode}`; }
-    function saveHighestStage(mode, stage) { const key = getHighestStageKey(mode); const currentHighest = loadHighestStage(mode); if (stage > currentHighest && stage <= maxStage) { localStorage.setItem(key, stage.toString()); console.log(`Mode ${mode}: Highest stage ${stage} saved.`); } } // maxStageを超えたら保存しない
+    function saveHighestStage(mode, stage) { const key = getHighestStageKey(mode); const currentHighest = loadHighestStage(mode); if (stage > currentHighest && stage <= maxStage) { localStorage.setItem(key, stage.toString()); console.log(`Mode ${mode}: Highest stage ${stage} saved.`); } }
     function loadHighestStage(mode) { const key = getHighestStageKey(mode); const savedStage = localStorage.getItem(key); return savedStage ? parseInt(savedStage, 10) : 0; }
 
-    // --- ★ デバッグ用ログ付き 問題生成関数 ★ ---
+    // --- 問題生成関数 ---
     function generateProblems(stage, mode, count) {
-        console.log(`generateProblems called with: stage=${stage}, mode=${mode}, count=${count}`); // ★デバッグログ
         const generatedProblems = [];
         let num1, num2, answer, questionText, type;
         for (let i = 0; i < count; i++) {
-            if (mode === 'grade1') { if (stage <= 5) { type = '+'; do { num1 = Math.floor(Math.random() * 10); num2 = Math.floor(Math.random() * (10 - num1)); } while (num1 === 0 && num2 === 0); answer = num1 + num2; } else if (stage <= 10) { type = '+'; num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * 10) + 1; answer = num1 + num2; } else { type = '-'; num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * num1) + 1; answer = num1 - num2; } }
-            else { if (stage <= 4) { type = '+'; num1 = Math.floor(Math.random() * 9) + 1; num2 = Math.floor(Math.random() * 9) + 1; answer = num1 + num2; } else if (stage <= 8) { type = '-'; num1 = Math.floor(Math.random() * 18) + 1; num2 = Math.floor(Math.random() * num1) + 1; answer = num1 - num2; } else if (stage <= 12) { type = '×'; num1 = Math.floor(Math.random() * 8) + 2; num2 = Math.floor(Math.random() * 8) + 2; answer = num1 * num2; } else { type = '÷'; num2 = Math.floor(Math.random() * 8) + 2; answer = Math.floor(Math.random() * 8) + 2; num1 = num2 * answer; } }
+            if (mode === 'grade1') { // 小1モード
+                if (stage <= 5) { // 簡単足し算
+                    type = '+';
+                    do { num1 = Math.floor(Math.random() * 10); num2 = Math.floor(Math.random() * (10 - num1)); } while (num1 === 0 && num2 === 0);
+                    answer = num1 + num2;
+                } else if (stage <= 10) { // 繰り上がり含む足し算
+                    type = '+';
+                    num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * 10) + 1;
+                    answer = num1 + num2;
+                } else { // 簡単引き算
+                    type = '-';
+                    num1 = Math.floor(Math.random() * 10) + 1; num2 = Math.floor(Math.random() * num1) + 1;
+                    answer = num1 - num2;
+                }
+            } else { // 小4モード
+                if (stage <= 4) { // 1桁足し算
+                    type = '+';
+                    num1 = Math.floor(Math.random() * 9) + 1; num2 = Math.floor(Math.random() * 9) + 1;
+                    answer = num1 + num2;
+                } else if (stage <= 8) { // 引き算
+                    type = '-';
+                    num1 = Math.floor(Math.random() * 18) + 1; num2 = Math.floor(Math.random() * num1) + 1;
+                    answer = num1 - num2;
+                } else if (stage <= 12) { // 掛け算 (九九)
+                    type = '×';
+                    num1 = Math.floor(Math.random() * 8) + 2; num2 = Math.floor(Math.random() * 8) + 2;
+                    answer = num1 * num2;
+                } else { // 割り算 (九九範囲)
+                    type = '÷';
+                    num2 = Math.floor(Math.random() * 8) + 2; // 割る数 2-9
+                    answer = Math.floor(Math.random() * 8) + 2; // 答え 2-9
+                    num1 = num2 * answer; // 割られる数
+                }
+            }
             questionText = `${num1} ${type} ${num2}`;
             generatedProblems.push({ q: questionText, a: answer });
         }
         // Fisher-Yatesシャッフル
         for (let i = generatedProblems.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [generatedProblems[i], generatedProblems[j]] = [generatedProblems[j], generatedProblems[i]]; }
-        console.log("Generated problems array:", generatedProblems); // ★デバッグログ
         return generatedProblems;
     }
-    // --- 選択肢生成関数 (変更なし) ---
-    function generateChoices(correct) { /* ... 省略 ... */ }
-    // --- HPバー更新関数 (変更なし) ---
-    function updateHPBar(elementId, currentHP, maxHP) { /* ... 省略 ... */ }
-    // --- キャラ揺れ関数 (変更なし) ---
-    function shakeCharacter(elementId) { /* ... 省略 ... */ }
-    // --- 時間評価表示関数 (変更なし) ---
-    function showFeedback(text, type) { /* ... 省略 ... */ }
-    // --- コンボ表示更新関数 (変更なし) ---
-    function updateComboDisplay() { /* ... 省略 ... */ }
 
-    // --- ★ デバッグ用ログ付き showQuestion関数 ★ ---
+    // --- 選択肢生成関数 ---
+    function generateChoices(correct) {
+        const choices = new Set(); choices.add(correct); let attempts = 0;
+        while (choices.size < 6 && attempts < 50) {
+            const range = Math.max(5, Math.abs(correct) * 0.5); const delta = Math.floor(Math.random() * (range * 2 + 1)) - range + (Math.random() < 0.1 ? (Math.random() < 0.5 ? 10 : -10) : 0 ); const choice = correct + delta;
+            if (choice !== correct && choice >= 0 && !choices.has(choice)) { choices.add(choice); } attempts++;
+        }
+        let filler = 1; while (choices.size < 6) { const fillChoice = Math.max(0, correct + filler); if (!choices.has(fillChoice)) { choices.add(fillChoice); } filler++; if (filler > 10) break; }
+        const choiceArray = Array.from(choices); choiceArray.sort(() => Math.random() - 0.5);
+        return choiceArray;
+    }
+
+    // --- HPバー更新関数 ---
+    function updateHPBar(elementId, currentHP, maxHP) { const bar = document.getElementById(elementId); const percentage = Math.max(0, (currentHP / maxHP) * 100); bar.style.width = `${percentage}%`; }
+    // --- キャラ揺れ関数 ---
+    function shakeCharacter(elementId) { const characterElement = document.getElementById(elementId); characterElement.classList.add('shake-animation'); setTimeout(() => { characterElement.classList.remove('shake-animation'); }, 200); }
+    // --- 時間評価表示関数 ---
+    function showFeedback(text, type) { feedbackDisplay.textContent = text; feedbackDisplay.className = 'show ' + type; setTimeout(() => { feedbackDisplay.className = ''; }, 800); }
+    // --- コンボ表示更新関数 ---
+    function updateComboDisplay() { if (comboCount >= 3) { comboDisplay.textContent = `${comboCount} Combo!`; comboDisplay.classList.remove('great-combo', 'amazing-combo'); if (comboCount >= 10) { comboDisplay.classList.add('amazing-combo'); } else if (comboCount >= 5) { comboDisplay.classList.add('great-combo'); } comboDisplay.classList.add('show'); } else { comboDisplay.classList.remove('show'); } }
+
+    // --- showQuestion関数 ---
     function showQuestion() {
-        console.log(`showQuestion called. Index: ${currentProblemIndex}, Problems array length: ${problems ? problems.length : 'undefined'}, questionsForThisStage: ${questionsForThisStage}`); // ★デバッグログ
-        if (problems && problems.length > currentProblemIndex) { console.log("Current problem data:", problems[currentProblemIndex]); } // ★デバッグログ
-        else { console.error("Problem data is missing or index out of bounds!"); } // ★デバッグログ
-
         battleInProgress = false;
         if (currentProblemIndex >= questionsForThisStage || playerHP <= 0 || enemyHP <= 0) { endBattle(); return; }
-
         const p = problems[currentProblemIndex];
-        if (!p) { // ★pが取得できなかった場合のガード
-            console.error("Failed to get problem data 'p' at index", currentProblemIndex);
-            battleLog.textContent = "エラー：問題データの取得に失敗しました。";
-            endBattle(); // エラー発生時は戦闘終了させる
-            return;
-        }
-
+        if (!p) { console.error("Failed to get problem data 'p' at index", currentProblemIndex); battleLog.textContent = "エラー：問題データの取得に失敗しました。"; endBattle(); return; }
         questionDiv.textContent = p.q;
         questionStartTime = Date.now();
-        battleLog.textContent = `Lv${currentStage} (${currentProblemIndex + 1}/${questionsForThisStage}) 問題！`; // 問題数表示修正
-
+        battleLog.textContent = `Lv${currentStage} (${currentProblemIndex + 1}/${questionsForThisStage}) 問題！`;
         const choices = generateChoices(p.a);
         answerChoicesDiv.innerHTML = "";
         choices.forEach(choice => { const btn = document.createElement("button"); btn.textContent = choice; btn.className = "choice-btn"; btn.onclick = () => handleAnswer(choice); answerChoicesDiv.appendChild(btn); });
     }
 
-    // --- handleAnswer関数 (効果音修正含む、変更なし) ---
-    function handleAnswer(selectedAnswer) { /* ... 省略 ... */ if (battleInProgress) return; battleInProgress = true; const choiceButtons = answerChoicesDiv.querySelectorAll('.choice-btn'); choiceButtons.forEach(btn => btn.disabled = true); playSound('tap'); const elapsed = (Date.now() - questionStartTime) / 1000; const p = problems[currentProblemIndex]; let feedbackClass = ''; let damageToEnemy = 0; let damageToPlayer = 0; let logMessage = ""; let feedbackText = ""; let feedbackType = ""; let isCritical = false; let criticalTime, perfectTime, greatTime, goodTime, slowPenalty, wrongPenalty; if (gameMode === 'grade1') { criticalTime = 1.5; perfectTime = 2.5; greatTime = 4.0; goodTime = 6.0; slowPenalty = 1; wrongPenalty = 2; } else { criticalTime = 0.8; perfectTime = 1.5; greatTime = 2.5; goodTime = 4.0; slowPenalty = 2; wrongPenalty = 3; } if (selectedAnswer === p.a) { comboCount++; let baseDamage = 0; if (elapsed < criticalTime) { baseDamage = (gameMode === 'grade1' ? 5 : 6); logMessage = `✨Critical Hit!✨ (${elapsed.toFixed(1)}秒) `; feedbackText = "Critical Hit!"; feedbackType = "critical"; isCritical = true; } else if (elapsed < perfectTime) { baseDamage = (gameMode === 'grade1' ? 3 : 4); logMessage = `Perfect! (${elapsed.toFixed(1)}秒) `; feedbackText = "Perfect!"; feedbackType = "perfect"; } else if (elapsed < greatTime) { baseDamage = (gameMode === 'grade1' ? 2 : 2); logMessage = `Great! (${elapsed.toFixed(1)}秒) `; feedbackText = "Great!"; feedbackType = "great"; } else if (elapsed < goodTime) { baseDamage = 1; logMessage = `Good (${elapsed.toFixed(1)}秒) `; feedbackText = "Good"; feedbackType = "good"; } else { damageToPlayer = slowPenalty; logMessage = `Too slow... (${elapsed.toFixed(1)}秒) 自分に${damageToPlayer}ダメージ!`; feedbackText = "Too Slow..."; feedbackType = "slow"; comboCount = 0; } let comboBonus = 0; if (comboCount >= 5) comboBonus = 2; else if (comboCount >= 3) comboBonus = 1; damageToEnemy = baseDamage + comboBonus; if(damageToEnemy > 0) { logMessage += `敵に${damageToEnemy}ダメージ!`; if (comboCount >= 3) logMessage += ` (${comboCount} Combo!)`; feedbackClass = 'feedback-flash'; shakeCharacter('enemyCharacter'); playSound('hitEnemy'); if(isCritical) playSound('criticalHit'); } else if (damageToPlayer > 0) { feedbackClass = 'feedback-damage-player'; shakeCharacter('playerCharacter'); playSound('hitPlayer'); } else { feedbackClass = 'feedback-correct'; } } else { playSound('wrong'); damageToPlayer = wrongPenalty; logMessage = `Wrong! 自分に${damageToPlayer}ダメージ!`; feedbackText = "Wrong!"; feedbackType = "wrong"; feedbackClass = 'feedback-wrong'; comboCount = 0; shakeCharacter('playerCharacter'); playSound('hitPlayer'); } updateComboDisplay(); enemyHP -= damageToEnemy; playerHP -= damageToPlayer; enemyHPText.textContent = Math.max(0, enemyHP); playerHPText.textContent = Math.max(0, playerHP); updateHPBar('enemyHPBar', enemyHP, enemyMaxHP); updateHPBar('playerHPBar', playerHP, playerMaxHP); battleLog.textContent = logMessage; if(feedbackText) showFeedback(feedbackText, feedbackType); if (feedbackClass) { document.body.classList.add(feedbackClass); setTimeout(() => { document.body.classList.remove(feedbackClass); }, 150); } currentProblemIndex++; setTimeout(() => { if (playerHP <= 0 || enemyHP <= 0 || currentProblemIndex >= questionsForThisStage) { endBattle(); } else { showQuestion(); } }, 1000); }
+    // --- handleAnswer関数 ---
+    function handleAnswer(selectedAnswer) {
+        if (battleInProgress) return;
+        battleInProgress = true;
+        const choiceButtons = answerChoicesDiv.querySelectorAll('.choice-btn');
+        choiceButtons.forEach(btn => btn.disabled = true);
+        playSound('tap');
 
-    // --- startBattle関数 (問題数設定含む、変更なし) ---
-    function startBattle() { /* ... 省略 ... */ currentEnemy = enemies[currentStage] || enemies[maxStage]; enemyMaxHP = currentEnemy.hp; if (currentEnemy.type === 'boss') { enemyMaxHP = Math.floor(enemyMaxHP * 1.5); } if (gameMode === 'grade1') { enemyMaxHP = Math.max(5, Math.floor(enemyMaxHP * 0.7)); } enemyHP = enemyMaxHP; playerHP = playerMaxHP; currentProblemIndex = 0; comboCount = 0; updateComboDisplay(); questionsForThisStage = (currentEnemy.type === 'boss') ? 20 : 10; problems = generateProblems(currentStage, gameMode, questionsForThisStage); enemyName.textContent = `${currentEnemy.emoji} ${currentEnemy.name} (Lv${currentStage})`; enemyHPText.textContent = enemyHP; playerHPText.textContent = playerHP; updateHPBar('enemyHPBar', enemyHP, enemyMaxHP); updateHPBar('playerHPBar', playerHP, playerMaxHP); enemyCharacter.textContent = currentEnemy.emoji; enemyCharacter.classList.remove('defeated'); stopBgm(); if (currentEnemy.type === 'boss') { document.body.classList.add('boss-battle-bg'); battleLog.textContent = `🔥ボス出現！ ${currentEnemy.name} があらわれた！🔥`; playBgm('bgmBoss'); } else { document.body.classList.remove('boss-battle-bg'); battleLog.textContent = `Lv${currentStage} ${currentEnemy.name} があらわれた！`; playBgm('bgmNormal'); } startBtn.style.display = "none"; battleInProgress = false; setTimeout(showQuestion, 1500); }
+        const elapsed = (Date.now() - questionStartTime) / 1000;
+        const p = problems[currentProblemIndex];
+        let feedbackClass = ''; let damageToEnemy = 0; let damageToPlayer = 0;
+        let logMessage = ""; let feedbackText = ""; let feedbackType = ""; let isCritical = false;
+        let criticalTime, perfectTime, greatTime, goodTime, slowPenalty, wrongPenalty;
+        if (gameMode === 'grade1') { criticalTime = 1.5; perfectTime = 2.5; greatTime = 4.0; goodTime = 6.0; slowPenalty = 1; wrongPenalty = 2; }
+        else { criticalTime = 0.8; perfectTime = 1.5; greatTime = 2.5; goodTime = 4.0; slowPenalty = 2; wrongPenalty = 3; }
 
-    // --- endBattle関数 (クリア状況保存含む、変更なし) ---
-    function endBattle() { /* ... 省略 ... */ battleInProgress = true; answerChoicesDiv.innerHTML = ""; questionDiv.textContent = "Battle End!"; comboDisplay.classList.remove('show'); stopBgm(); let resultMessage = ""; let nextButtonText = ""; let isVictory = false; if (enemyHP <= 0) { isVictory = true; playSound('enemyDefeated'); enemyCharacter.classList.add('defeated'); resultMessage = `🎉勝利！ ${currentEnemy.name} をたおした！🎉`; if (currentEnemy.type === 'boss') { resultMessage += ` すごい！ボスを撃破したぞ！`; } saveHighestStage(gameMode, currentStage); currentStage++; if (currentStage > maxStage) { resultMessage += " 🏆全ステージクリア！おめでとう！🏆"; startBtn.style.display = "none"; } else { nextButtonText = `次の敵 (Lv${currentStage}) と戦う！`; startBtn.style.display = "inline-block"; } } else { resultMessage = playerHP <= 0 ? "😭敗北...また挑戦してね！" : "時間切れ...もう一度挑戦！"; nextButtonText = "再挑戦！"; startBtn.style.display = "inline-block"; } battleLog.textContent = resultMessage; if (nextButtonText) { startBtn.textContent = nextButtonText; } document.body.classList.add(isVictory ? 'feedback-correct' : 'feedback-wrong'); setTimeout(() => { document.body.classList.remove('feedback-correct', 'feedback-wrong', 'boss-battle-bg'); }, 1000); }
+        if (selectedAnswer === p.a) { // 正解
+            comboCount++; let baseDamage = 0;
+            if (elapsed < criticalTime) { baseDamage = (gameMode === 'grade1' ? 5 : 6); logMessage = `✨Critical Hit!✨ (${elapsed.toFixed(1)}秒) `; feedbackText = "Critical Hit!"; feedbackType = "critical"; isCritical = true; }
+            else if (elapsed < perfectTime) { baseDamage = (gameMode === 'grade1' ? 3 : 4); logMessage = `Perfect! (${elapsed.toFixed(1)}秒) `; feedbackText = "Perfect!"; feedbackType = "perfect"; }
+            else if (elapsed < greatTime) { baseDamage = (gameMode === 'grade1' ? 2 : 2); logMessage = `Great! (${elapsed.toFixed(1)}秒) `; feedbackText = "Great!"; feedbackType = "great"; }
+            else if (elapsed < goodTime) { baseDamage = 1; logMessage = `Good (${elapsed.toFixed(1)}秒) `; feedbackText = "Good"; feedbackType = "good"; }
+            else { damageToPlayer = slowPenalty; logMessage = `Too slow... (${elapsed.toFixed(1)}秒) 自分に${damageToPlayer}ダメージ!`; feedbackText = "Too Slow..."; feedbackType = "slow"; comboCount = 0; }
+            let comboBonus = 0; if (comboCount >= 5) comboBonus = 2; else if (comboCount >= 3) comboBonus = 1;
+            damageToEnemy = baseDamage + comboBonus;
+            if(damageToEnemy > 0) { logMessage += `敵に${damageToEnemy}ダメージ!`; if (comboCount >= 3) logMessage += ` (${comboCount} Combo!)`; feedbackClass = 'feedback-flash'; shakeCharacter('enemyCharacter'); playSound('hitEnemy'); if(isCritical) playSound('criticalHit'); }
+            else if (damageToPlayer > 0) { feedbackClass = 'feedback-damage-player'; shakeCharacter('playerCharacter'); playSound('hitPlayer'); }
+            else { feedbackClass = 'feedback-correct'; }
+        } else { // 不正解
+            playSound('wrong'); damageToPlayer = wrongPenalty; logMessage = `Wrong! 自分に${damageToPlayer}ダメージ!`; feedbackText = "Wrong!"; feedbackType = "wrong";
+            feedbackClass = 'feedback-wrong'; comboCount = 0; shakeCharacter('playerCharacter'); playSound('hitPlayer');
+        }
+        updateComboDisplay();
+        enemyHP -= damageToEnemy; playerHP -= damageToPlayer;
+        enemyHPText.textContent = Math.max(0, enemyHP); playerHPText.textContent = Math.max(0, playerHP);
+        updateHPBar('enemyHPBar', enemyHP, enemyMaxHP); updateHPBar('playerHPBar', playerHP, playerMaxHP);
+        battleLog.textContent = logMessage;
+        if(feedbackText) showFeedback(feedbackText, feedbackType);
+        if (feedbackClass) { document.body.classList.add(feedbackClass); setTimeout(() => { document.body.classList.remove(feedbackClass); }, 150); }
+        currentProblemIndex++;
+        setTimeout(() => { if (playerHP <= 0 || enemyHP <= 0 || currentProblemIndex >= questionsForThisStage) { endBattle(); } else { showQuestion(); } }, 1000);
+    }
 
-    // --- モード選択処理 (変更なし) ---
-    function selectMode(selectedMode) { playSound('tap'); gameMode = selectedMode; highestClearedStage = loadHighestStage(gameMode); modeSelectScreen.style.display = 'none'; startMethodScreen.style.display = 'flex'; if (highestClearedStage > 0 && highestClearedStage < maxStage) { const nextStage = highestClearedStage + 1; continueFromLastBtn.textContent = `つづきから (Lv ${nextStage})`; continueFromLastBtn.style.display = 'inline-block'; continueFromLastBtn.disabled = false; } else { continueFromLastBtn.style.display = 'none'; continueFromLastBtn.disabled = true; } loadBgmSetting(); }
-    // --- スタート方法選択ボタンの処理 (変更なし) ---
-    function startGameFlow() { playSound('tap'); startMethodScreen.style.display = 'none'; battleScreen.style.display = 'flex'; startBattle(); }
+    // --- startBattle関数 ---
+    function startBattle() {
+        currentEnemy = enemies[currentStage] || enemies[maxStage];
+        enemyMaxHP = currentEnemy.hp;
+        if (currentEnemy.type === 'boss') { enemyMaxHP = Math.floor(enemyMaxHP * 1.5); } // ボスHP1.5倍
+        if (gameMode === 'grade1') { enemyMaxHP = Math.max(5, Math.floor(enemyMaxHP * 0.7)); }
+        enemyHP = enemyMaxHP;
+        playerHP = playerMaxHP;
+        currentProblemIndex = 0; comboCount = 0; updateComboDisplay();
+        questionsForThisStage = (currentEnemy.type === 'boss') ? 20 : 10; // ボスは20問
+        problems = generateProblems(currentStage, gameMode, questionsForThisStage);
+
+        enemyName.textContent = `${currentEnemy.emoji} ${currentEnemy.name} (Lv${currentStage})`;
+        enemyHPText.textContent = enemyHP; playerHPText.textContent = playerHP;
+        updateHPBar('enemyHPBar', enemyHP, enemyMaxHP); updateHPBar('playerHPBar', playerHP, playerMaxHP);
+        enemyCharacter.textContent = currentEnemy.emoji;
+        enemyCharacter.classList.remove('defeated');
+        stopBgm();
+        if (currentEnemy.type === 'boss') { document.body.classList.add('boss-battle-bg'); battleLog.textContent = `🔥ボス出現！ ${currentEnemy.name} があらわれた！🔥`; playBgm('bgmBoss'); }
+        else { document.body.classList.remove('boss-battle-bg'); battleLog.textContent = `Lv${currentStage} ${currentEnemy.name} があらわれた！`; playBgm('bgmNormal'); }
+        startBtn.style.display = "none";
+        battleInProgress = false;
+        setTimeout(showQuestion, 1500);
+    }
+
+    // --- endBattle関数 ---
+    function endBattle() {
+        battleInProgress = true; answerChoicesDiv.innerHTML = ""; questionDiv.textContent = "Battle End!"; comboDisplay.classList.remove('show'); stopBgm();
+        let resultMessage = ""; let nextButtonText = ""; let isVictory = false;
+
+        if (enemyHP <= 0) { // 勝利
+            isVictory = true; playSound('enemyDefeated'); enemyCharacter.classList.add('defeated');
+            resultMessage = `🎉勝利！ ${currentEnemy.name} をたおした！🎉`;
+            if (currentEnemy.type === 'boss') { resultMessage += ` すごい！ボスを撃破したぞ！`; }
+            saveHighestStage(gameMode, currentStage); // クリアステージを保存
+            currentStage++;
+            if (currentStage > maxStage) { resultMessage += " 🏆全ステージクリア！おめでとう！🏆"; startBtn.style.display = "none"; }
+            else { nextButtonText = `次の敵 (Lv${currentStage}) と戦う！`; startBtn.style.display = "inline-block"; }
+        } else { // 敗北 or 問題切れ
+             resultMessage = playerHP <= 0 ? "😭敗北...また挑戦してね！" : "時間切れ...もう一度挑戦！";
+             nextButtonText = "再挑戦！"; startBtn.style.display = "inline-block";
+        }
+        battleLog.textContent = resultMessage; if (nextButtonText) { startBtn.textContent = nextButtonText; }
+        document.body.classList.add(isVictory ? 'feedback-correct' : 'feedback-wrong'); setTimeout(() => { document.body.classList.remove('feedback-correct', 'feedback-wrong', 'boss-battle-bg'); }, 1000);
+    }
+
+    // --- モード選択処理 ---
+    function selectMode(selectedMode) {
+        playSound('tap');
+        gameMode = selectedMode;
+        highestClearedStage = loadHighestStage(gameMode);
+        modeSelectScreen.style.display = 'none';
+        startMethodScreen.style.display = 'flex';
+        if (highestClearedStage > 0 && highestClearedStage < maxStage) {
+            const nextStage = highestClearedStage + 1;
+            continueFromLastBtn.textContent = `つづきから (Lv ${nextStage})`;
+            continueFromLastBtn.style.display = 'inline-block';
+            continueFromLastBtn.disabled = false;
+        } else {
+            continueFromLastBtn.style.display = 'none';
+            continueFromLastBtn.disabled = true;
+        }
+        loadBgmSetting();
+    }
+
+    // --- スタート方法選択ボタンの処理 ---
+    function startGameFlow() {
+        playSound('tap');
+        startMethodScreen.style.display = 'none';
+        battleScreen.style.display = 'flex';
+        startBattle();
+    }
     startFromBeginningBtn.addEventListener('click', () => { currentStage = 1; startGameFlow(); });
     continueFromLastBtn.addEventListener('click', () => { currentStage = highestClearedStage + 1; if (currentStage > maxStage) currentStage = maxStage; startGameFlow(); });
-    // --- 他のイベントリスナー (変更なし) ---
-    grade1ModeBtn.addEventListener("click", () => selectMode('grade1')); grade4ModeBtn.addEventListener("click", () => selectMode('grade4')); startBtn.addEventListener("click", () => { playSound('tap'); enemyCharacter.classList.remove('defeated'); startBattle(); });
 
-    // --- 初期化処理 (変更なし) ---
-    loadBgmSetting(); playerHPText.textContent = playerHP; updateHPBar('playerHPBar', playerHP, playerMaxHP);
+    // --- 他のイベントリスナー ---
+    grade1ModeBtn.addEventListener("click", () => selectMode('grade1')); grade4ModeBtn.addEventListener("click", () => selectMode('grade4'));
+    startBtn.addEventListener("click", () => { playSound('tap'); enemyCharacter.classList.remove('defeated'); startBattle(); });
+
+    // --- 初期化処理 ---
+    loadBgmSetting(); // BGM設定読み込み
+    playerHPText.textContent = playerHP;
+    updateHPBar('playerHPBar', playerHP, playerMaxHP);
+    // 初期画面はモード選択なので、他は不要
 
   </script>
 </body>
