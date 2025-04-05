@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ねこスピードチャレンジ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'M PLUS Rounded 1c', sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 15px;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 100vh;
+      overflow-y: auto;
+      padding-bottom: 30px;
+      height: 100%;
+      color: #444;
+    }
+    html { height: 100%; }
+    h1 { font-size: 2.2em; color: #4682b4; margin-top: 20px; margin-bottom: 15px; font-weight: 700; }
+    #question {
+      font-size: 4.5em;
+      margin: 30px 0;
+      color: #333;
+      font-weight: 700;
+      line-height: 1.2;
+      min-height: 1.5em;
+      opacity: 1;
+      transform: scale(1);
+    }
+    #coinInfo, #questionNumber, #timer, #titleBadge, #info {
+      font-size: 1.1em;
+      color: #555;
+      margin: 3px 0;
+    }
+    #titleBadge { color: #ff6347; font-weight: 700; min-height: 1.3em; }
+    #startBtn, #homeBtn, #rankBtn, #shopBtn, .shop-item button {
+      font-family: 'M PLUS Rounded 1c', sans-serif;
+      font-size: 1.3em; padding: 10px 25px; margin: 10px;
+      border: none; border-radius: 30px; background-color: #ffb6c1;
+      color: white; cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+      font-weight: 700; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    #startBtn:hover, #homeBtn:hover, #rankBtn:hover, #shopBtn:hover, .shop-item button:hover { background-color: #ff9aaa; }
+    #startBtn:active, #homeBtn:active, #rankBtn:active, #shopBtn:active, .shop-item button:active {
+      transform: scale(0.97); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    #rankList, #shopModal {
+      display: none;
+      margin-top: 25px;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: left;
+      font-size: 1em;
+      max-width: 500px;
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      color: #555;
+      border: 1px solid #ddd;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .shop-item { margin: 10px 0; font-size: 1.1em; }
+    .shop-item button { margin-left: 10px; border-radius: 10px; }
+    @media (max-width: 600px) {
+      body { padding: 10px; padding-bottom: 20px; }
+      h1 { font-size: 1.8em; }
+      #question { font-size: 3.5em; margin: 20px 0; }
+    }
+    @keyframes fadeInScaleUp {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .animate-reveal { animation: fadeInScaleUp 0.3s ease-out; }
+  </style>
+</head>
+<body>
+  <h1>ねこスピードチャレンジ</h1>
+  <div id="coinInfo">💰 ねこコイン: 0</div>
+  <div id="info">スタートボタンを押してね</div>
+  <div id="questionNumber"></div>
+  <div id="timer"></div>
+  <div id="question">🐱</div>
+  <div id="titleBadge"></div>
+  <div id="rankList">
+    <h2>🏅 称号と報酬一覧</h2>
+    <ul>
+      <li>🚀 光速のネコ：150コイン（～30.0秒）</li>
+      <li>✨ 神速のネコ：130コイン（～35.0秒）</li>
+      <li>⚡ とてもはやねこ：115コイン（～38.0秒）</li>
+      <li>🏃‍♂️ はやねこ：100コイン（～41.0秒）</li>
+      <li>🐾 ちょいはやねこ：90コイン（～44.0秒）</li>
+      <li>🐱 がんばりねこ：80コイン（～47.0秒）</li>
+      <li>😺 ふつうねこ：70コイン（～50.0秒）</li>
+      <li>😸 ふつうよりちょいのんびりねこ：55コイン（～53.0秒）</li>
+      <li>🐢 のんびりねこ：45コイン（～55.0秒）</li>
+      <li>💤 ねむたいねこ：30コイン（～70.0秒）</li>
+      <li>🐌 まったりねこ：10コイン（70.1秒～）</li>
+    </ul>
+  </div>
+  <button id="startBtn">スタート</button>
+  <button id="homeBtn" style="display: none;">ホームにもどる</button>
+  <button id="rankBtn">称号一覧</button>
+  <button id="shopBtn">ショップ</button>
+  <div id="shopModal">
+    <h2>ねこショップ</h2>
+    <div id="shopItems"></div>
+    <button id="closeShop">とじる</button>
+  </div>
+  <script>
+    const shopItemsData = [
+      { id: "cat1", emoji: "🐱", name: "ノーマルねこ", price: 0 },
+      { id: "cat2", emoji: "😺", name: "スマイルねこ", price: 100 },
+      { id: "cat3", emoji: "😸", name: "キラキラねこ", price: 150 },
+      { id: "hat1", emoji: "🎩", name: "シルクハット", price: 80 },
+      { id: "hat2", emoji: "👑", name: "王冠", price: 120 },
+      { id: "hat3", emoji: "🎓", name: "がくせい帽", price: 100 },
+      { id: "bg1", emoji: "🌈", name: "にじ", price: 100 },
+      { id: "bg2", emoji: "🌅", name: "ゆうやけ", price: 120 },
+      { id: "bg3", emoji: "🌌", name: "よるのそら", price: 150 }
+    ];
+    function renderShopItems() {
+      const shopItemsContainer = document.getElementById("shopItems");
+      shopItemsContainer.innerHTML = "";
+      const owned = JSON.parse(localStorage.getItem("ownedItems") || "[]");
+      shopItemsData.forEach(item => {
+        const isOwned = owned.includes(item.id);
+        const div = document.createElement("div");
+        div.className = "shop-item";
+        div.innerHTML = `${item.emoji} ${item.name} - ${item.price}コイン`;
+        if (item.price > 0 && !isOwned) {
+          const btn = document.createElement("button");
+          btn.textContent = "買う";
+          btn.addEventListener("click", () => buyItem(item));
+          div.appendChild(btn);
+        } else {
+          div.innerHTML += isOwned ? " ✅ 購入済" : " 🎁 初期装備";
+        }
+        shopItemsContainer.appendChild(div);
+      });
+    }
+    function buyItem(item) {
+      const coins = getCoins();
+      if (coins >= item.price) {
+        const newCoins = coins - item.price;
+        setCoins(newCoins);
+        const owned = JSON.parse(localStorage.getItem("ownedItems") || "[]");
+        owned.push(item.id);
+        localStorage.setItem("ownedItems", JSON.stringify(owned));
+        alert(`${item.name} を購入したよ！`);
+        renderShopItems();
+      } else {
+        alert("コインが足りないよ！");
+      }
+    }
+    document.getElementById("shopBtn").addEventListener("click", () => {
+      renderShopItems();
+      document.getElementById("shopModal").style.display = "block";
+    });
+    document.getElementById("closeShop").addEventListener("click", () => {
+      document.getElementById("shopModal").style.display = "none";
+    });
+  </script>
+</body>
+</html>
