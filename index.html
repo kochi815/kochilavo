@@ -332,7 +332,7 @@
         enemyHP = enemyMaxHP;
         playerHP = playerMaxHP;
         currentProblemIndex = 0; comboCount = 0; updateComboDisplay();
-        questionsForThisStage = (currentEnemy.type === 'boss') ? 20 : 10; // ボスは20問
+        questionsForThisStage = (currentEnemy.type === 'boss') ? 23 : 17; // ボスは20問
         problems = generateProblems(currentStage, gameMode, questionsForThisStage);
 
         enemyName.textContent = `${currentEnemy.emoji} ${currentEnemy.name} (Lv${currentStage})`;
