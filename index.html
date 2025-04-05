@@ -279,7 +279,7 @@
         choices.forEach(choice => { const btn = document.createElement("button"); btn.textContent = choice; btn.className = "choice-btn"; btn.onclick = () => handleAnswer(choice); answerChoicesDiv.appendChild(btn); });
     }
 
-    // --- ★ handleAnswer関数 (クリティカル判定緩和) ★ ---
+// --- handleAnswer関数 (★小1モードの時間基準とペナルティを緩和) ---
     function handleAnswer(selectedAnswer) {
         if (battleInProgress) return;
         battleInProgress = true;
@@ -292,9 +292,21 @@
         let feedbackClass = ''; let damageToEnemy = 0; let damageToPlayer = 0;
         let logMessage = ""; let feedbackText = ""; let feedbackType = ""; let isCritical = false;
 
+        // --- モード別 時間基準とダメージ調整 ---
         let criticalTime, perfectTime, greatTime, goodTime, slowPenalty, wrongPenalty;
-        if (gameMode === 'grade1') { criticalTime = 1.5; perfectTime = 2.5; greatTime = 4.0; goodTime = 6.0; slowPenalty = 1; wrongPenalty = 2; }
-        else { criticalTime = 1.0; perfectTime = 1.8; greatTime = 3.0; goodTime = 4.5; slowPenalty = 2; wrongPenalty = 3; } // ★変更: 小4モードの時間基準を全体的に少し緩和 (Critical 0.8->1.0)
+        if (gameMode === 'grade1') {
+            // ★↓↓↓ ここを緩和 ↓↓↓★
+            criticalTime = 2.0;  // 1.5秒 → 2.0秒
+            perfectTime = 3.5;   // 2.5秒 → 3.5秒
+            greatTime = 5.0;     // 4.0秒 → 5.0秒
+            goodTime = 7.5;      // 6.0秒 → 7.5秒
+            slowPenalty = 1;     // 変更なし
+            wrongPenalty = 1;    // 2 → 1ダメージ
+            // ★↑↑↑ ここまで緩和 ↑↑↑★
+        } else { // grade4
+            criticalTime = 1.0; perfectTime = 1.8; greatTime = 3.0; goodTime = 4.5; slowPenalty = 2; wrongPenalty = 3;
+        }
+        // --- ここまで調整 ---
 
         if (selectedAnswer === p.a) { // 正解
             comboCount++; let baseDamage = 0;
@@ -322,7 +334,6 @@
         currentProblemIndex++;
         setTimeout(() => { if (playerHP <= 0 || enemyHP <= 0 || currentProblemIndex >= questionsForThisStage) { endBattle(); } else { showQuestion(); } }, 1000);
     }
-
     // --- startBattle関数 ---
     function startBattle() {
         currentEnemy = enemies[currentStage] || enemies[maxStage];
