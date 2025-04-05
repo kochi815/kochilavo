@@ -15,15 +15,7 @@
     h1 {
       font-size: 2em;
       color: #ff6f61;
-    }
-    #battleLog {
-      font-size: 1.2em;
-      min-height: 2em;
-      margin: 10px 0;
-    }
-    #question {
-      font-size: 2.5em;
-      margin: 20px 0;
+      margin-bottom: 15px;
     }
     #avatarDisplay {
       font-size: 2em;
@@ -33,27 +25,56 @@
       font-size: 1.1em;
       margin: 10px 0;
     }
+    #question {
+      font-size: 2.5em;
+      margin: 20px 0;
+    }
+    #battleLog {
+      font-size: 1.2em;
+      min-height: 2em;
+      margin: 10px 0;
+    }
+    #answerInput {
+      font-size: 1.5em;
+      padding: 8px;
+      width: 80px;
+      margin-top: 10px;
+      text-align: center;
+      border: 2px solid #ffb347;
+      border-radius: 10px;
+    }
     button {
       font-size: 1.2em;
       padding: 10px 30px;
+      margin: 10px;
       border-radius: 20px;
       border: none;
       background-color: #ffb347;
       color: white;
       font-weight: bold;
       cursor: pointer;
+      /* タッチ操作のための大きめエリア確保 */\n      min-width: 120px;
     }
     button:hover {
       background-color: #ff9933;
+    }
+    /* iPad/iPhone向けの調整 */
+    @media (max-width: 768px) {
+      h1 { font-size: 1.8em; }
+      #question { font-size: 2em; }
+      #battleLog { font-size: 1.1em; }
+      button { font-size: 1em; padding: 8px 20px; min-width: 100px; }
+      #answerInput { font-size: 1.2em; width: 60px; }
     }
   </style>
 </head>
 <body>
   <h1>ねこバトルチャレンジ</h1>
-  <div id="avatarDisplay">キャラ表示</div>
+  <div id="avatarDisplay">🎩😺🌈</div>
   <div id="enemyStatus">🐶 ??? (Lv <span id="enemyLevel">1</span>) - HP: <span id="enemyHP">10</span></div>
   <div id="playerStatus">😺 にゃんたろう - HP: <span id="playerHP">10</span></div>
   <div id="question">問題表示</div>
+  <input id="answerInput" type="number" placeholder="答え">
   <div id="battleLog">戦闘ログ</div>
   <button id="startBtn">スタート</button>
 
@@ -74,6 +95,7 @@
     const playerHPDisplay = document.getElementById("playerHP");
     const avatarDisplay = document.getElementById("avatarDisplay");
     const enemyStatus = document.getElementById("enemyStatus");
+    const answerInput = document.getElementById("answerInput");
 
     const equipped = { cat: "😺", hat: "🎩", bg: "🌈" };
 
@@ -110,16 +132,18 @@
       const p = problems[index];
       questionDiv.textContent = p.q;
       startTime = Date.now();
-      battleLog.textContent = "回答してね！ (click anywhere)";
+      battleLog.textContent = "回答してね！";
+      answerInput.value = "";
+      answerInput.focus();
     }
 
     function handleAnswer() {
       const elapsed = (Date.now() - startTime) / 1000;
       const p = problems[index];
-      const userAnswer = prompt(`${p.q} = ?`);
-      if (userAnswer === null) return;
+      const userAnswer = parseInt(answerInput.value);
+      if (isNaN(userAnswer)) return;
 
-      if (parseInt(userAnswer) === p.a) {
+      if (userAnswer === p.a) {
         if (elapsed < 1.2) {
           enemyHP -= 5;
           battleLog.textContent = "Perfect! 敵に5ダメージ!";
@@ -154,10 +178,12 @@
       enemyLevelDisplay.textContent = enemy.level;
       enemyStatus.innerHTML = `${enemy.emoji} ${enemy.name} (Lv ${enemy.level}) - HP: <span id="enemyHP">${enemy.hp}</span>`;
       startBtn.style.display = "none";
+      answerInput.style.display = "inline-block";
       showQuestion();
     }
 
     function endBattle() {
+      answerInput.style.display = "none";
       if (enemyHP <= 0) {
         battleLog.textContent = `勝利！ ${enemyList[currentStage - 1].name} をたおした！`;
         currentStage++;
@@ -183,8 +209,8 @@
       startBattle();
     });
 
-    document.body.addEventListener("click", () => {
-      if (startBtn.style.display === "none") {
+    answerInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && startBtn.style.display === "none") {
         handleAnswer();
       }
     });
